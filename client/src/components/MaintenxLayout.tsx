@@ -21,6 +21,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
+import PresenterDemoDrawer from "./PresenterDemoDrawer";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -241,6 +242,7 @@ export function MaintenxLayout({ children }: LayoutProps) {
           </div>
         </div>
       </footer>
+      <PresenterDemoDrawer />
     </div>
   );
 }
