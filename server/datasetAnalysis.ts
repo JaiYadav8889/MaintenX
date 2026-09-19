@@ -25,6 +25,15 @@ export type RealDatasetManifest = {
       testSize: number | null;
       metrics: Record<string, number> | null;
       confusionMatrix: number[][] | null;
+      runtimeModel: {
+        numericFeatureOrder: string[];
+        numericMeans: number[];
+        numericScales: number[];
+        typeCategories: string[];
+        coefficients: number[];
+        intercept: number;
+        probabilityNote: string;
+      } | null;
       notes: string | null;
     };
     analysisStatus: string;
@@ -43,7 +52,7 @@ export type RealDatasetManifest = {
     missingValues: Record<string, number>;
     featureMappings: Array<{ datasetField: string; maintenxConcept: string; processing: string }>;
     preprocessing: string[];
-    aggregates: Array<{ category: string; fileCount: number; recordCount: number; meanCenteredVectorRms: number; meanCenteredVectorPeak: number; meanCrestFactor: number }>;
+    aggregates: Array<{ category: string; fileCount: number; recordCount: number; meanCenteredVectorRms: number; meanCenteredVectorPeak: number; meanCrestFactor: number; relativeRmsVsNormalPct: number | null }>;
     files: Array<{ name: string; recordCount: number; category: string; operatingLoad: string; electricalCondition: string; features: Record<string, unknown> }>;
     analysisStatus: string;
   };
@@ -136,5 +145,46 @@ export function getRealDatasetStatus() {
       preprocessing: manifest.soonPemp.preprocessing,
       files: manifest.soonPemp.files,
     },
+  };
+}
+
+export type AI4IRuntimeInput = {
+  airTempK: number;
+  processTempK: number;
+  rpm: number;
+  torqueNm: number;
+  toolWearMin: number;
+  type: "L" | "M" | "H";
+};
+
+export function predictAI4IFailure(input: AI4IRuntimeInput) {
+  const manifest = getRealDatasetManifest();
+  const runtimeModel = manifest?.ai4i.baselineModel.runtimeModel;
+  if (!runtimeModel) {
+    return {
+      available: false as const,
+      datasetId: "ai4i-2020-uploaded",
+      label: "unavailable",
+      probabilityPct: null,
+      note: "The exported benchmark model parameters are unavailable.",
+    };
+  }
+
+  const numericValues = [input.airTempK, input.processTempK, input.rpm, input.torqueNm, input.toolWearMin];
+  const standardized = numericValues.map((value, index) => (value - runtimeModel.numericMeans[index]) / (runtimeModel.numericScales[index] || 1));
+  const encodedType = runtimeModel.typeCategories.map((category) => category === input.type ? 1 : 0);
+  const features = [...standardized, ...encodedType];
+  const logit = runtimeModel.intercept + features.reduce((sum, value, index) => sum + value * (runtimeModel.coefficients[index] || 0), 0);
+  const probability = 1 / (1 + Math.exp(-Math.max(-40, Math.min(40, logit))));
+  return {
+    available: true as const,
+    datasetId: "ai4i-2020-uploaded",
+    label: probability >= 0.5 ? "Machine failure likely" : "Machine failure not likely",
+    predictedFailure: probability >= 0.5,
+    probabilityPct: Math.round(probability * 10000) / 100,
+    threshold: 0.5,
+    model: "Holdout-benchmark logistic regression",
+    basis: "model-prediction" as const,
+    note: runtimeModel.probabilityNote,
   };
 }

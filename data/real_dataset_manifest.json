@@ -173,6 +173,46 @@
           56
         ]
       ],
+      "runtimeModel": {
+        "numericFeatureOrder": [
+          "Air temperature [K]",
+          "Process temperature [K]",
+          "Rotational speed [rpm]",
+          "Torque [Nm]",
+          "Tool wear [min]"
+        ],
+        "numericMeans": [
+          300.00545,
+          310.0060625,
+          1539.356875,
+          40.0033625,
+          107.685
+        ],
+        "numericScales": [
+          1.996719258559,
+          1.479339209273,
+          180.971631106189,
+          10.018919350089,
+          63.608026419627
+        ],
+        "typeCategories": [
+          "H",
+          "L",
+          "M"
+        ],
+        "coefficients": [
+          1.780760742167,
+          -1.230947736744,
+          1.730630942616,
+          2.405049603191,
+          0.860511934365,
+          -0.549098388015,
+          -0.082375621734,
+          -0.545609050292
+        ],
+        "intercept": -1.209355892795,
+        "probabilityNote": "Sigmoid probability from the fitted holdout-benchmark logistic regression; not production-calibrated."
+      },
       "notes": "Single stratified 80/20 holdout; benchmark only, not production validation. No raw vibration fields are included because AI4I has no vibration channel."
     },
     "analysisStatus": "Loaded / benchmark calculated",
@@ -417,6 +457,7 @@
       "All files share the same four columns; no missing values found in the inspected channels.",
       "Raw accelerometer offsets are removed before vector RMS/peak calculations so DC bias is not mistaken for vibration amplitude.",
       "File-level aggregation is used for browser performance; raw high-frequency samples remain outside the client bundle.",
+      "Relative RMS is calculated only against the uploaded Normal operation file and is a vibration-benchmark comparison, not a fleet-health score.",
       "Frequency-domain features are not asserted because the archive README does not establish a physical timestamp unit/sampling frequency."
     ],
     "aggregates": [
@@ -426,7 +467,8 @@
         "recordCount": 1527226,
         "meanCenteredVectorRms": 3571.288384,
         "meanCenteredVectorPeak": 15723.059283,
-        "meanCrestFactor": 4.463266
+        "meanCrestFactor": 4.463266,
+        "relativeRmsVsNormalPct": 16.36
       },
       {
         "category": "Electrical fault",
@@ -434,7 +476,8 @@
         "recordCount": 734140,
         "meanCenteredVectorRms": 3180.037239,
         "meanCenteredVectorPeak": 17208.01525,
-        "meanCrestFactor": 5.394683
+        "meanCrestFactor": 5.394683,
+        "relativeRmsVsNormalPct": 3.62
       },
       {
         "category": "Mechanical fault (shaft imbalance/misalignment context)",
@@ -442,7 +485,8 @@
         "recordCount": 1060544,
         "meanCenteredVectorRms": 2956.331385,
         "meanCenteredVectorPeak": 14203.59503,
-        "meanCrestFactor": 5.1428
+        "meanCrestFactor": 5.1428,
+        "relativeRmsVsNormalPct": -3.67
       },
       {
         "category": "Normal operation",
@@ -450,7 +494,8 @@
         "recordCount": 107346,
         "meanCenteredVectorRms": 3069.069879,
         "meanCenteredVectorPeak": 12873.263568,
-        "meanCrestFactor": 4.194516
+        "meanCrestFactor": 4.194516,
+        "relativeRmsVsNormalPct": 0.0
       },
       {
         "category": "Normal operation with load",
@@ -458,7 +503,8 @@
         "recordCount": 102909,
         "meanCenteredVectorRms": 2930.913209,
         "meanCenteredVectorPeak": 11535.742691,
-        "meanCrestFactor": 3.935887
+        "meanCrestFactor": 3.935887,
+        "relativeRmsVsNormalPct": -4.5
       }
     ],
     "files": [

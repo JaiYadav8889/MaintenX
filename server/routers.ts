@@ -12,7 +12,7 @@ import {
   buildScenarioAnalysis
 } from "./fleetData";
 import { evaluateMachineTelemetry } from "../shared/riskEngine";
-import { getRealDatasetCatalog, getRealDatasetManifest, getRealDatasetStatus } from "./datasetAnalysis";
+import { getRealDatasetCatalog, getRealDatasetManifest, getRealDatasetStatus, predictAI4IFailure } from "./datasetAnalysis";
 import fs from "fs";
 import path from "path";
 
@@ -243,6 +243,17 @@ export const appRouter = router({
 
     getRealStatus: publicProcedure.query(() => getRealDatasetStatus()),
 
+    predictAI4IFailure: publicProcedure
+      .input(z.object({
+        airTempK: z.number(),
+        processTempK: z.number(),
+        rpm: z.number(),
+        torqueNm: z.number(),
+        toolWearMin: z.number(),
+        type: z.enum(["L", "M", "H"]),
+      }))
+      .query(({ input }) => predictAI4IFailure(input)),
+
     getAI4ISamples: publicProcedure
       .input(z.object({ limit: z.number().default(20), onlyFailures: z.boolean().default(false) }))
       .query(({ input }) => {
@@ -279,7 +290,8 @@ export const appRouter = router({
         rpm: z.number(),
         torqueNm: z.number(),
         toolWearMin: z.number(),
-        vibrationRmsMmS: z.number().optional()
+        vibrationRmsMmS: z.number().optional(),
+        type: z.enum(["L", "M", "H"]).default("M")
       }))
       .mutation(({ input }) => {
         const airC = input.airTempK - 273.15;
@@ -300,8 +312,23 @@ export const appRouter = router({
           vibrationRmsMmS: Math.round(vib * 100) / 100
         });
 
+        const modelPrediction = predictAI4IFailure({
+          airTempK: input.airTempK,
+          processTempK: input.processTempK,
+          rpm: input.rpm,
+          torqueNm: input.torqueNm,
+          toolWearMin: input.toolWearMin,
+          type: input.type,
+        });
+
         return {
           assessed,
+          modelPrediction,
+          dataBasis: {
+            telemetry: "user-entered AI4I-compatible record",
+            modelPrediction: "AI4I 2020 uploaded-data benchmark model",
+            ruleAssessment: "MaintenX transparent rule-based hybrid engine",
+          },
           normalizedTelemetry: {
             airTempC: Math.round(airC * 10) / 10,
             processTempC: Math.round(procC * 10) / 10,
@@ -342,7 +369,7 @@ export const appRouter = router({
     resetFleet: publicProcedure.mutation(() => {
       // Re-trigger progression back to initial conditions
       fleetStore.forEach(m => {
-        if (m.id === "MTR-101" || m.id === "PMP-301" || m.id === "PMP-302" || m.id === "HYD-501") {
+        if (m.id === "MTR-042" || m.id === "PMP-301" || m.id === "PMP-302" || m.id === "HYD-501") {
           simulateMachineProgression(m.id, "healthy");
         } else if (m.id === "MTR-102" || m.id === "CNC-202") {
           simulateMachineProgression(m.id, "warning");

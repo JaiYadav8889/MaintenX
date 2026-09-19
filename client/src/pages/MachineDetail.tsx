@@ -12,7 +12,7 @@ type ScenarioMode = "maintenance" | "no-maintenance";
 
 export default function MachineDetail() {
   const [, params] = useRoute("/machine/:id");
-  const machineId = params?.id || "MTR-101";
+  const machineId = params?.id || "MTR-042";
   const machineQuery = trpc.fleet.getById.useQuery({ id: machineId }, { refetchInterval: 5000 });
   const [activeTab, setActiveTab] = useState<"vibration" | "thermal" | "mechanical">("vibration");
   const [scenarioMode, setScenarioMode] = useState<ScenarioMode>("no-maintenance");

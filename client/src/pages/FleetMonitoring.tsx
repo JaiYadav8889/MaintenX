@@ -94,7 +94,7 @@ export default function FleetMonitoring() {
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
             <Input
               type="text"
-              placeholder="Search by ID (MTR-101), machine name, model or bay..."
+              placeholder="Search by ID (MTR-042), machine name, model or bay..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-9 bg-slate-950 border-slate-800 text-xs placeholder:text-slate-500 text-white"

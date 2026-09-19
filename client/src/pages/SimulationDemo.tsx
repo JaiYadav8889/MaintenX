@@ -13,7 +13,7 @@ type Scenario = "maintenance" | "no-maintenance";
 export default function SimulationDemo() {
   const fleetQuery = trpc.fleet.list.useQuery();
   const fleet = fleetQuery.data || [];
-  const [selectedMachineId, setSelectedMachineId] = useState("MTR-101");
+  const [selectedMachineId, setSelectedMachineId] = useState("MTR-042");
   const [currentStage, setCurrentStage] = useState<Stage>("healthy");
   const [scenario, setScenario] = useState<Scenario>("no-maintenance");
   const selectedMachine = fleet.find((machine) => machine.id === selectedMachineId) || fleet[0];

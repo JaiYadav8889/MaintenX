@@ -15,7 +15,7 @@ const INITIAL_FLEET_BASE: Array<{
   dataSource: MachineRecord["dataSource"];
 }> = [
   {
-    id: "MTR-101",
+    id: "MTR-042",
     name: "Spindle Drive Motor A1",
     type: "Industrial Induction Motor (3-Phase)",
     serialNumber: "SN-IND-2022-881",
@@ -517,6 +517,8 @@ export function simulateMachineProgression(
   let newTorque = 40.0;
   let newRpm = 1520;
   let newWear = 45;
+  let newCurrentA = 17.0;
+  let newLoadPct = 50;
 
   if (targetStage === "healthy") {
     newVib = 1.55;
@@ -524,24 +526,32 @@ export function simulateMachineProgression(
     newTorque = 39.5;
     newRpm = 1530;
     newWear = 30;
+    newCurrentA = 17.0;
+    newLoadPct = 50;
   } else if (targetStage === "warning") {
     newVib = 3.35; // Above ISO warning 2.8
     newTempDiff = 12.1;
     newTorque = 54.0;
     newRpm = 1450;
     newWear = 175;
+    newCurrentA = 17.5;
+    newLoadPct = 70;
   } else if (targetStage === "high_risk") {
     newVib = 4.85; // Above ISO alert 4.5
     newTempDiff = 13.5;
-    newTorque = 61.5;
+    newTorque = 54.0;
     newRpm = 1380;
-    newWear = 215;
+    newWear = 190;
+    newCurrentA = 17.5;
+    newLoadPct = 75;
   } else if (targetStage === "critical") {
     newVib = 7.45; // Critical ISO Zone D
     newTempDiff = 15.2;
     newTorque = 68.0;
     newRpm = 1260;
     newWear = 245;
+    newCurrentA = 23.5;
+    newLoadPct = 95;
   }
 
   const updatedTelemetry: SensorTelemetry = {
@@ -554,9 +564,9 @@ export function simulateMachineProgression(
     toolWearMin: newWear,
     powerKw: Math.round(((newTorque * 2 * Math.PI * newRpm) / 60) / 10) / 100,
     vibrationRmsMmS: newVib,
-    motorCurrentA: Math.round((12.0 + (newTorque / 50.0) * 8.0) * 10) / 10,
+    motorCurrentA: newCurrentA,
     motorVoltageV: 400,
-    loadPct: Math.max(15, Math.min(100, Math.round((newTorque / 55) * 70))),
+    loadPct: newLoadPct,
     operatingHours: Math.round(newWear * 3.1),
     vibrationTrendPct: targetStage === "healthy" ? 0 : targetStage === "warning" ? 14 : targetStage === "high_risk" ? 28 : 45,
     temperatureTrendPct: targetStage === "healthy" ? 0 : targetStage === "warning" ? 10 : targetStage === "high_risk" ? 22 : 38,

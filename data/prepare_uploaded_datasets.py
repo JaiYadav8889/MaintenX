@@ -60,6 +60,7 @@ def analyze_ai4i():
         'testSize': None,
         'metrics': None,
         'confusionMatrix': None,
+        'runtimeModel': None,
         'notes': None,
     }
     try:
@@ -95,6 +96,10 @@ def analyze_ai4i():
         ])
         pipe.fit(X_train, y_train)
         predictions = pipe.predict(X_test)
+        fitted_pre = pipe.named_steps['preprocess']
+        fitted_classifier = pipe.named_steps['classifier']
+        numeric_scaler = fitted_pre.named_transformers_['numeric']
+        type_encoder = fitted_pre.named_transformers_['type']
         model_result = {
             'status': 'calculated',
             'algorithm': 'StandardScaler + OneHotEncoder(Type) + LogisticRegression(class_weight=balanced)',
@@ -106,6 +111,15 @@ def analyze_ai4i():
                 'f1': round(float(f1_score(y_test, predictions, zero_division=0)), 4),
             },
             'confusionMatrix': confusion_matrix(y_test, predictions).tolist(),
+            'runtimeModel': {
+                'numericFeatureOrder': numeric_fields,
+                'numericMeans': [round(float(value), 12) for value in numeric_scaler.mean_],
+                'numericScales': [round(float(value), 12) for value in numeric_scaler.scale_],
+                'typeCategories': [str(value) for value in type_encoder.categories_[0]],
+                'coefficients': [round(float(value), 12) for value in fitted_classifier.coef_[0]],
+                'intercept': round(float(fitted_classifier.intercept_[0]), 12),
+                'probabilityNote': 'Sigmoid probability from the fitted holdout-benchmark logistic regression; not production-calibrated.',
+            },
             'notes': 'Single stratified 80/20 holdout; benchmark only, not production validation. No raw vibration fields are included because AI4I has no vibration channel.',
         }
     except Exception as error:
@@ -238,16 +252,20 @@ def analyze_soon():
     category_groups = defaultdict(list)
     for item in summaries:
         category_groups[item['category']].append(item)
+    normal_items = category_groups.get('Normal operation', [])
+    normal_rms = statistics.fmean(item['features']['centeredVectorRms'] for item in normal_items) if normal_items else None
     aggregates = []
     for category, items in sorted(category_groups.items()):
-        aggregates.append({
+        aggregate = {
             'category': category,
             'fileCount': len(items),
             'recordCount': sum(item['recordCount'] for item in items),
             'meanCenteredVectorRms': round(statistics.fmean(item['features']['centeredVectorRms'] for item in items), 6),
             'meanCenteredVectorPeak': round(statistics.fmean(item['features']['centeredVectorPeak'] for item in items), 6),
             'meanCrestFactor': round(statistics.fmean(item['features']['crestFactor'] for item in items if item['features']['crestFactor'] is not None), 6),
-        })
+        }
+        aggregate['relativeRmsVsNormalPct'] = round(((aggregate['meanCenteredVectorRms'] / normal_rms) - 1) * 100, 2) if normal_rms else None
+        aggregates.append(aggregate)
 
     return {
         'datasetId': 'soon-pemp-uploaded',
@@ -270,9 +288,10 @@ def analyze_soon():
             'All files share the same four columns; no missing values found in the inspected channels.',
             'Raw accelerometer offsets are removed before vector RMS/peak calculations so DC bias is not mistaken for vibration amplitude.',
             'File-level aggregation is used for browser performance; raw high-frequency samples remain outside the client bundle.',
+            'Relative RMS is calculated only against the uploaded Normal operation file and is a vibration-benchmark comparison, not a fleet-health score.',
             'Frequency-domain features are not asserted because the archive README does not establish a physical timestamp unit/sampling frequency.',
         ],
-        'aggregates': aggregates,
+            'aggregates': aggregates,
         'files': summaries,
         'analysisStatus': 'Loaded / time-domain features calculated',
     }
