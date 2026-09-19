@@ -181,6 +181,10 @@ export interface DatasetInfo {
   machineTypesRepresented: string[];
   scientificReference: string;
   datasetStatus: "Loaded" | "Ready" | "Available";
+  analysisStatus?: string;
+  provenance?: string;
+  actualColumns?: string[];
+  availableLabels?: string[];
 }
 
 export interface ScenarioPoint {

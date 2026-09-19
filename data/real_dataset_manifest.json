@@ -1,0 +1,1818 @@
+{
+  "generatedAt": "2026-09-19",
+  "processingContract": "Real uploaded data only; no synthetic rows added to the manifest.",
+  "ai4i": {
+    "datasetId": "ai4i-2020-uploaded",
+    "datasetName": "AI4I 2020 Predictive Maintenance Dataset",
+    "sourceFile": "ai4i2020.csv",
+    "sourceType": "CSV / labeled production-cycle records",
+    "sourceReference": "UCI Machine Learning Repository; uploaded file hash validated against the existing project copy.",
+    "recordCount": 10000,
+    "columns": [
+      "UDI",
+      "Product ID",
+      "Type",
+      "Air temperature [K]",
+      "Process temperature [K]",
+      "Rotational speed [rpm]",
+      "Torque [Nm]",
+      "Tool wear [min]",
+      "Machine failure",
+      "TWF",
+      "HDF",
+      "PWF",
+      "OSF",
+      "RNF"
+    ],
+    "missingValues": {
+      "UDI": 0,
+      "Product ID": 0,
+      "Type": 0,
+      "Air temperature [K]": 0,
+      "Process temperature [K]": 0,
+      "Rotational speed [rpm]": 0,
+      "Torque [Nm]": 0,
+      "Tool wear [min]": 0,
+      "Machine failure": 0,
+      "TWF": 0,
+      "HDF": 0,
+      "PWF": 0,
+      "OSF": 0,
+      "RNF": 0
+    },
+    "duplicateRecords": 0,
+    "labels": {
+      "Type": {
+        "M": 2997,
+        "L": 6000,
+        "H": 1003
+      },
+      "Machine failure": {
+        "0": 9661,
+        "1": 339
+      },
+      "TWF": {
+        "0": 9954,
+        "1": 46
+      },
+      "HDF": {
+        "0": 9885,
+        "1": 115
+      },
+      "PWF": {
+        "0": 9905,
+        "1": 95
+      },
+      "OSF": {
+        "0": 9902,
+        "1": 98
+      },
+      "RNF": {
+        "0": 9981,
+        "1": 19
+      }
+    },
+    "numericStats": {
+      "Air temperature [K]": {
+        "count": 10000,
+        "min": 295.3,
+        "max": 304.5,
+        "mean": 300.00493,
+        "stdev": 2.000159
+      },
+      "Process temperature [K]": {
+        "count": 10000,
+        "min": 305.7,
+        "max": 313.8,
+        "mean": 310.00556,
+        "stdev": 1.48366
+      },
+      "Rotational speed [rpm]": {
+        "count": 10000,
+        "min": 1168.0,
+        "max": 2886.0,
+        "mean": 1538.7761,
+        "stdev": 179.275131
+      },
+      "Torque [Nm]": {
+        "count": 10000,
+        "min": 3.8,
+        "max": 76.6,
+        "mean": 39.98691,
+        "stdev": 9.968435
+      },
+      "Tool wear [min]": {
+        "count": 10000,
+        "min": 0.0,
+        "max": 253.0,
+        "mean": 107.951,
+        "stdev": 63.650964
+      }
+    },
+    "featureMappings": [
+      {
+        "datasetField": "Air temperature [K]",
+        "maintenxConcept": "Ambient temperature / thermal context",
+        "processing": "Kelvin to Celsius conversion; paired with process temperature for \u0394T."
+      },
+      {
+        "datasetField": "Process temperature [K]",
+        "maintenxConcept": "Process temperature / thermal context",
+        "processing": "Kelvin to Celsius conversion; \u0394T derived against ambient."
+      },
+      {
+        "datasetField": "Rotational speed [rpm]",
+        "maintenxConcept": "RPM / mechanical operating envelope",
+        "processing": "Numeric validation and range comparison."
+      },
+      {
+        "datasetField": "Torque [Nm]",
+        "maintenxConcept": "Load / shaft torque",
+        "processing": "Numeric validation; power derived only for compatible records."
+      },
+      {
+        "datasetField": "Tool wear [min]",
+        "maintenxConcept": "Wear / service-life proxy",
+        "processing": "Numeric validation; retained as a labeled AI4I feature."
+      },
+      {
+        "datasetField": "Machine failure, TWF, HDF, PWF, OSF, RNF",
+        "maintenxConcept": "Failure classification targets",
+        "processing": "Binary labels retained; failure prevalence reported."
+      },
+      {
+        "datasetField": "Type",
+        "maintenxConcept": "Product variant context",
+        "processing": "One-hot encoded for the benchmark classifier only."
+      }
+    ],
+    "preprocessing": [
+      "UTF-8 BOM-safe CSV parsing.",
+      "All 10,000 rows retained; no missing values found.",
+      "0 exact duplicate records found and reported; no rows removed from the analysis manifest.",
+      "Numeric features are standardized only inside the benchmark model pipeline.",
+      "No vibration/current/voltage columns were fabricated for AI4I."
+    ],
+    "baselineModel": {
+      "status": "calculated",
+      "algorithm": "StandardScaler + OneHotEncoder(Type) + LogisticRegression(class_weight=balanced)",
+      "testSize": 2000,
+      "metrics": {
+        "accuracy": 0.8245,
+        "precision": 0.1418,
+        "recall": 0.8235,
+        "f1": 0.2419
+      },
+      "confusionMatrix": [
+        [
+          1593,
+          339
+        ],
+        [
+          12,
+          56
+        ]
+      ],
+      "notes": "Single stratified 80/20 holdout; benchmark only, not production validation. No raw vibration fields are included because AI4I has no vibration channel."
+    },
+    "analysisStatus": "Loaded / benchmark calculated",
+    "sampleRows": [
+      {
+        "UDI": "1",
+        "Product ID": "M14860",
+        "Type": "M",
+        "Air temperature [K]": "298.1",
+        "Process temperature [K]": "308.6",
+        "Rotational speed [rpm]": "1551",
+        "Torque [Nm]": "42.8",
+        "Tool wear [min]": "0",
+        "Machine failure": "0",
+        "TWF": "0",
+        "HDF": "0",
+        "PWF": "0",
+        "OSF": "0",
+        "RNF": "0"
+      },
+      {
+        "UDI": "2",
+        "Product ID": "L47181",
+        "Type": "L",
+        "Air temperature [K]": "298.2",
+        "Process temperature [K]": "308.7",
+        "Rotational speed [rpm]": "1408",
+        "Torque [Nm]": "46.3",
+        "Tool wear [min]": "3",
+        "Machine failure": "0",
+        "TWF": "0",
+        "HDF": "0",
+        "PWF": "0",
+        "OSF": "0",
+        "RNF": "0"
+      },
+      {
+        "UDI": "3",
+        "Product ID": "L47182",
+        "Type": "L",
+        "Air temperature [K]": "298.1",
+        "Process temperature [K]": "308.5",
+        "Rotational speed [rpm]": "1498",
+        "Torque [Nm]": "49.4",
+        "Tool wear [min]": "5",
+        "Machine failure": "0",
+        "TWF": "0",
+        "HDF": "0",
+        "PWF": "0",
+        "OSF": "0",
+        "RNF": "0"
+      },
+      {
+        "UDI": "4",
+        "Product ID": "L47183",
+        "Type": "L",
+        "Air temperature [K]": "298.2",
+        "Process temperature [K]": "308.6",
+        "Rotational speed [rpm]": "1433",
+        "Torque [Nm]": "39.5",
+        "Tool wear [min]": "7",
+        "Machine failure": "0",
+        "TWF": "0",
+        "HDF": "0",
+        "PWF": "0",
+        "OSF": "0",
+        "RNF": "0"
+      },
+      {
+        "UDI": "5",
+        "Product ID": "L47184",
+        "Type": "L",
+        "Air temperature [K]": "298.2",
+        "Process temperature [K]": "308.7",
+        "Rotational speed [rpm]": "1408",
+        "Torque [Nm]": "40.0",
+        "Tool wear [min]": "9",
+        "Machine failure": "0",
+        "TWF": "0",
+        "HDF": "0",
+        "PWF": "0",
+        "OSF": "0",
+        "RNF": "0"
+      },
+      {
+        "UDI": "6",
+        "Product ID": "M14865",
+        "Type": "M",
+        "Air temperature [K]": "298.1",
+        "Process temperature [K]": "308.6",
+        "Rotational speed [rpm]": "1425",
+        "Torque [Nm]": "41.9",
+        "Tool wear [min]": "11",
+        "Machine failure": "0",
+        "TWF": "0",
+        "HDF": "0",
+        "PWF": "0",
+        "OSF": "0",
+        "RNF": "0"
+      },
+      {
+        "UDI": "7",
+        "Product ID": "L47186",
+        "Type": "L",
+        "Air temperature [K]": "298.1",
+        "Process temperature [K]": "308.6",
+        "Rotational speed [rpm]": "1558",
+        "Torque [Nm]": "42.4",
+        "Tool wear [min]": "14",
+        "Machine failure": "0",
+        "TWF": "0",
+        "HDF": "0",
+        "PWF": "0",
+        "OSF": "0",
+        "RNF": "0"
+      },
+      {
+        "UDI": "8",
+        "Product ID": "L47187",
+        "Type": "L",
+        "Air temperature [K]": "298.1",
+        "Process temperature [K]": "308.6",
+        "Rotational speed [rpm]": "1527",
+        "Torque [Nm]": "40.2",
+        "Tool wear [min]": "16",
+        "Machine failure": "0",
+        "TWF": "0",
+        "HDF": "0",
+        "PWF": "0",
+        "OSF": "0",
+        "RNF": "0"
+      },
+      {
+        "UDI": "9",
+        "Product ID": "M14868",
+        "Type": "M",
+        "Air temperature [K]": "298.3",
+        "Process temperature [K]": "308.7",
+        "Rotational speed [rpm]": "1667",
+        "Torque [Nm]": "28.6",
+        "Tool wear [min]": "18",
+        "Machine failure": "0",
+        "TWF": "0",
+        "HDF": "0",
+        "PWF": "0",
+        "OSF": "0",
+        "RNF": "0"
+      },
+      {
+        "UDI": "10",
+        "Product ID": "M14869",
+        "Type": "M",
+        "Air temperature [K]": "298.5",
+        "Process temperature [K]": "309",
+        "Rotational speed [rpm]": "1741",
+        "Torque [Nm]": "28.0",
+        "Tool wear [min]": "21",
+        "Machine failure": "0",
+        "TWF": "0",
+        "HDF": "0",
+        "PWF": "0",
+        "OSF": "0",
+        "RNF": "0"
+      },
+      {
+        "UDI": "11",
+        "Product ID": "H29424",
+        "Type": "H",
+        "Air temperature [K]": "298.4",
+        "Process temperature [K]": "308.9",
+        "Rotational speed [rpm]": "1782",
+        "Torque [Nm]": "23.9",
+        "Tool wear [min]": "24",
+        "Machine failure": "0",
+        "TWF": "0",
+        "HDF": "0",
+        "PWF": "0",
+        "OSF": "0",
+        "RNF": "0"
+      },
+      {
+        "UDI": "12",
+        "Product ID": "H29425",
+        "Type": "H",
+        "Air temperature [K]": "298.6",
+        "Process temperature [K]": "309.1",
+        "Rotational speed [rpm]": "1423",
+        "Torque [Nm]": "44.3",
+        "Tool wear [min]": "29",
+        "Machine failure": "0",
+        "TWF": "0",
+        "HDF": "0",
+        "PWF": "0",
+        "OSF": "0",
+        "RNF": "0"
+      }
+    ]
+  },
+  "soonPemp": {
+    "datasetId": "soon-pemp-uploaded",
+    "datasetName": "Electric Motor Vibrations Dataset / SOON-pEMP",
+    "sourceFile": "SOON-pEMP.zip",
+    "sourceType": "ZIP archive containing labeled vibration CSV experiments",
+    "sourceReference": "Uploaded SOON-pEMP archive; README categories retained as file-level fault/operating context.",
+    "fileCount": 30,
+    "recordCount": 3532165,
+    "columns": [
+      "Timestamp",
+      "AccX",
+      "AccY",
+      "AccZ"
+    ],
+    "labels": [
+      "Compound mechanical + electrical fault",
+      "Electrical fault",
+      "Mechanical fault (shaft imbalance/misalignment context)",
+      "Normal operation",
+      "Normal operation with load"
+    ],
+    "missingValues": {
+      "allFiles": 0
+    },
+    "featureMappings": [
+      {
+        "datasetField": "Timestamp",
+        "maintenxConcept": "Sequence/time ordering",
+        "processing": "Retained as source ticks; interval inspected but not converted to Hz because physical unit is not established in the archive README."
+      },
+      {
+        "datasetField": "AccX, AccY, AccZ",
+        "maintenxConcept": "Motor vibration / anomaly evidence",
+        "processing": "Streaming per-file mean, standard deviation, centered vector RMS, centered vector peak, and crest factor; raw waveforms are not sent to the browser."
+      },
+      {
+        "datasetField": "File name + README category",
+        "maintenxConcept": "Operating/fault context",
+        "processing": "Parsed into normal/load, mechanical, electrical, and compound condition labels; source identity preserved per file."
+      }
+    ],
+    "preprocessing": [
+      "All 30 CSV files inspected in-stream from the ZIP archive.",
+      "All files share the same four columns; no missing values found in the inspected channels.",
+      "Raw accelerometer offsets are removed before vector RMS/peak calculations so DC bias is not mistaken for vibration amplitude.",
+      "File-level aggregation is used for browser performance; raw high-frequency samples remain outside the client bundle.",
+      "Frequency-domain features are not asserted because the archive README does not establish a physical timestamp unit/sampling frequency."
+    ],
+    "aggregates": [
+      {
+        "category": "Compound mechanical + electrical fault",
+        "fileCount": 13,
+        "recordCount": 1527226,
+        "meanCenteredVectorRms": 3571.288384,
+        "meanCenteredVectorPeak": 15723.059283,
+        "meanCrestFactor": 4.463266
+      },
+      {
+        "category": "Electrical fault",
+        "fileCount": 7,
+        "recordCount": 734140,
+        "meanCenteredVectorRms": 3180.037239,
+        "meanCenteredVectorPeak": 17208.01525,
+        "meanCrestFactor": 5.394683
+      },
+      {
+        "category": "Mechanical fault (shaft imbalance/misalignment context)",
+        "fileCount": 8,
+        "recordCount": 1060544,
+        "meanCenteredVectorRms": 2956.331385,
+        "meanCenteredVectorPeak": 14203.59503,
+        "meanCrestFactor": 5.1428
+      },
+      {
+        "category": "Normal operation",
+        "fileCount": 1,
+        "recordCount": 107346,
+        "meanCenteredVectorRms": 3069.069879,
+        "meanCenteredVectorPeak": 12873.263568,
+        "meanCrestFactor": 4.194516
+      },
+      {
+        "category": "Normal operation with load",
+        "fileCount": 1,
+        "recordCount": 102909,
+        "meanCenteredVectorRms": 2930.913209,
+        "meanCenteredVectorPeak": 11535.742691,
+        "meanCrestFactor": 3.935887
+      }
+    ],
+    "files": [
+      {
+        "name": "Data/01 - m1_half_shaft_speed_no_mechanical_load.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 107346,
+        "category": "Normal operation",
+        "operatingLoad": "no mechanical load",
+        "electricalCondition": "none specified",
+        "timestamp": {
+          "first": 2141864.0,
+          "last": 203405364.0,
+          "medianIntervalTicksFirst10000": 1848.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 297.075699,
+            "AccY": -185.443882,
+            "AccZ": 16202.955098
+          },
+          "axisStd": {
+            "AccX": 1774.097227,
+            "AccY": 593.134398,
+            "AccZ": 2433.096903
+          },
+          "axisMin": {
+            "AccX": -5986.0,
+            "AccY": -2884.0,
+            "AccZ": 5296.0
+          },
+          "axisMax": {
+            "AccX": 6406.0,
+            "AccY": 2003.0,
+            "AccZ": 25580.0
+          },
+          "centeredVectorRms": 3069.069879,
+          "centeredVectorPeak": 12873.263568,
+          "crestFactor": 4.194516
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/02 - m1_load_0.5Nm_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 102909,
+        "category": "Normal operation with load",
+        "operatingLoad": "0.5 Nm load",
+        "electricalCondition": "none specified",
+        "timestamp": {
+          "first": 252357968.0,
+          "last": 447221856.0,
+          "medianIntervalTicksFirst10000": 1892.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 295.718849,
+            "AccY": -184.130999,
+            "AccZ": 16201.044534
+          },
+          "axisStd": {
+            "AccX": 1744.229667,
+            "AccY": 606.353968,
+            "AccZ": 2276.01625
+          },
+          "axisMin": {
+            "AccX": -6228.0,
+            "AccY": -2598.0,
+            "AccZ": 7099.0
+          },
+          "axisMax": {
+            "AccX": 6935.0,
+            "AccY": 2295.0,
+            "AccZ": 25044.0
+          },
+          "centeredVectorRms": 2930.913209,
+          "centeredVectorPeak": 11535.742691,
+          "crestFactor": 3.935887
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/03 - m1_mechanically_imbalanced_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 100514,
+        "category": "Mechanical fault (shaft imbalance/misalignment context)",
+        "operatingLoad": "no mechanical load",
+        "electricalCondition": "none specified",
+        "timestamp": {
+          "first": 2648.0,
+          "last": 188795208.0,
+          "medianIntervalTicksFirst10000": 1848.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 232.132061,
+            "AccY": -146.248095,
+            "AccZ": 16135.785572
+          },
+          "axisStd": {
+            "AccX": 1291.045468,
+            "AccY": 1209.608848,
+            "AccZ": 1330.025018
+          },
+          "axisMin": {
+            "AccX": -4920.0,
+            "AccY": -4326.0,
+            "AccZ": -167.0
+          },
+          "axisMax": {
+            "AccX": 5623.0,
+            "AccY": 3424.0,
+            "AccZ": 22130.0
+          },
+          "centeredVectorRms": 2213.350066,
+          "centeredVectorPeak": 17672.368277,
+          "crestFactor": 7.984443
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/04 - m1_mechanically_imbalanced_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 142799,
+        "category": "Mechanical fault (shaft imbalance/misalignment context)",
+        "operatingLoad": "no mechanical load",
+        "electricalCondition": "none specified",
+        "timestamp": {
+          "first": 2680.0,
+          "last": 266850916.0,
+          "medianIntervalTicksFirst10000": 1828.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 255.518519,
+            "AccY": -87.147592,
+            "AccZ": 16081.54221
+          },
+          "axisStd": {
+            "AccX": 3422.876758,
+            "AccY": 3252.79243,
+            "AccZ": 4690.543135
+          },
+          "axisMin": {
+            "AccX": -8560.0,
+            "AccY": -8459.0,
+            "AccZ": -2590.0
+          },
+          "axisMax": {
+            "AccX": 8333.0,
+            "AccY": 9452.0,
+            "AccZ": 32764.0
+          },
+          "centeredVectorRms": 6655.669673,
+          "centeredVectorPeak": 22745.003672,
+          "crestFactor": 3.417388
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/05 - m1_mechanically_imbalanced_load_0.5Nm_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 151123,
+        "category": "Mechanical fault (shaft imbalance/misalignment context)",
+        "operatingLoad": "0.5 Nm load",
+        "electricalCondition": "none specified",
+        "timestamp": {
+          "first": 4683088.0,
+          "last": 284953412.0,
+          "medianIntervalTicksFirst10000": 1788.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 238.910331,
+            "AccY": -134.683999,
+            "AccZ": 16132.443222
+          },
+          "axisStd": {
+            "AccX": 1094.110657,
+            "AccY": 1048.886753,
+            "AccZ": 1370.317787
+          },
+          "axisMin": {
+            "AccX": -6045.0,
+            "AccY": -3475.0,
+            "AccZ": 8496.0
+          },
+          "axisMax": {
+            "AccX": 5776.0,
+            "AccY": 3202.0,
+            "AccZ": 25456.0
+          },
+          "centeredVectorRms": 2043.284705,
+          "centeredVectorPeak": 11729.192258,
+          "crestFactor": 5.740361
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/06 - m1_electrically_50_ohm_fault_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 104293,
+        "category": "Electrical fault",
+        "operatingLoad": "no mechanical load",
+        "electricalCondition": "50 \u03a9 simulated electrical fault",
+        "timestamp": {
+          "first": 749374180.0,
+          "last": 947246224.0,
+          "medianIntervalTicksFirst10000": 1896.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 295.727441,
+            "AccY": -185.456761,
+            "AccZ": 16207.302264
+          },
+          "axisStd": {
+            "AccX": 1782.184816,
+            "AccY": 905.627677,
+            "AccZ": 2482.650723
+          },
+          "axisMin": {
+            "AccX": -6187.0,
+            "AccY": -3469.0,
+            "AccZ": -159.0
+          },
+          "axisMax": {
+            "AccX": 6828.0,
+            "AccY": 2686.0,
+            "AccZ": 29686.0
+          },
+          "centeredVectorRms": 3187.459619,
+          "centeredVectorPeak": 17925.06878,
+          "crestFactor": 5.623622
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/07 - m1_electrically_100_ohm_fault_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 101854,
+        "category": "Electrical fault",
+        "operatingLoad": "no mechanical load",
+        "electricalCondition": "100 \u03a9 simulated electrical fault",
+        "timestamp": {
+          "first": 2452282256.0,
+          "last": 2649531380.0,
+          "medianIntervalTicksFirst10000": 1936.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 293.460846,
+            "AccY": -183.505763,
+            "AccZ": 16212.580635
+          },
+          "axisStd": {
+            "AccX": 1829.907882,
+            "AccY": 1231.772236,
+            "AccZ": 2657.036855
+          },
+          "axisMin": {
+            "AccX": -6451.0,
+            "AccY": -4572.0,
+            "AccZ": -1.0
+          },
+          "axisMax": {
+            "AccX": 6642.0,
+            "AccY": 3589.0,
+            "AccZ": 26976.0
+          },
+          "centeredVectorRms": 3453.356417,
+          "centeredVectorPeak": 18100.464933,
+          "crestFactor": 5.241412
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/08 - m1_electrically_150_ohm_fault_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 107174,
+        "category": "Electrical fault",
+        "operatingLoad": "no mechanical load",
+        "electricalCondition": "50 \u03a9 simulated electrical fault",
+        "timestamp": {
+          "first": 590774624.0,
+          "last": 794074712.0,
+          "medianIntervalTicksFirst10000": 1900.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 298.347491,
+            "AccY": -184.794456,
+            "AccZ": 16209.861235
+          },
+          "axisStd": {
+            "AccX": 1260.715914,
+            "AccY": 1337.054869,
+            "AccZ": 1883.112756
+          },
+          "axisMin": {
+            "AccX": -5471.0,
+            "AccY": -5142.0,
+            "AccZ": 7049.0
+          },
+          "axisMax": {
+            "AccX": 6826.0,
+            "AccY": 3538.0,
+            "AccZ": 24516.0
+          },
+          "centeredVectorRms": 2631.203905,
+          "centeredVectorPeak": 12292.498227,
+          "crestFactor": 4.671815
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/09 - m1_electrically_50_ohm_fault_load_0.5Nm_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 102782,
+        "category": "Electrical fault",
+        "operatingLoad": "0.5 Nm load",
+        "electricalCondition": "50 \u03a9 simulated electrical fault",
+        "timestamp": {
+          "first": 995721304.0,
+          "last": 1194612552.0,
+          "medianIntervalTicksFirst10000": 1932.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 287.378695,
+            "AccY": -186.102275,
+            "AccZ": 16210.058318
+          },
+          "axisStd": {
+            "AccX": 1784.79869,
+            "AccY": 1083.218044,
+            "AccZ": 2379.175765
+          },
+          "axisMin": {
+            "AccX": -6575.0,
+            "AccY": -3881.0,
+            "AccZ": -1.0
+          },
+          "axisMax": {
+            "AccX": 6632.0,
+            "AccY": 3330.0,
+            "AccZ": 25912.0
+          },
+          "centeredVectorRms": 3165.334898,
+          "centeredVectorPeak": 17987.298917,
+          "crestFactor": 5.68259
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/10 - m1_electrically_100_ohm_fault_load_0.5Nm_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 103376,
+        "category": "Electrical fault",
+        "operatingLoad": "0.5 Nm load",
+        "electricalCondition": "100 \u03a9 simulated electrical fault",
+        "timestamp": {
+          "first": 2688858388.0,
+          "last": 2889300960.0,
+          "medianIntervalTicksFirst10000": 1940.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 302.400731,
+            "AccY": -184.211538,
+            "AccZ": 16192.658896
+          },
+          "axisStd": {
+            "AccX": 1810.232912,
+            "AccY": 1377.814102,
+            "AccZ": 2501.05391
+          },
+          "axisMin": {
+            "AccX": -6476.0,
+            "AccY": -4302.0,
+            "AccZ": -247.0
+          },
+          "axisMax": {
+            "AccX": 6810.0,
+            "AccY": 3821.0,
+            "AccZ": 26628.0
+          },
+          "centeredVectorRms": 3380.914899,
+          "centeredVectorPeak": 18252.815752,
+          "crestFactor": 5.39878
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/11 - m1_mechanically_imbalanced_electrically_50_ohm_fault_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 150374,
+        "category": "Compound mechanical + electrical fault",
+        "operatingLoad": "no mechanical load",
+        "electricalCondition": "50 \u03a9 simulated electrical fault",
+        "timestamp": {
+          "first": 8516460.0,
+          "last": 292859240.0,
+          "medianIntervalTicksFirst10000": 1868.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 239.071788,
+            "AccY": -169.429429,
+            "AccZ": 16191.572759
+          },
+          "axisStd": {
+            "AccX": 1891.295688,
+            "AccY": 1283.281355,
+            "AccZ": 2406.655082
+          },
+          "axisMin": {
+            "AccX": -6458.0,
+            "AccY": -4174.0,
+            "AccZ": 4941.0
+          },
+          "axisMax": {
+            "AccX": 7567.0,
+            "AccY": 4214.0,
+            "AccZ": 25600.0
+          },
+          "centeredVectorRms": 3319.005739,
+          "centeredVectorPeak": 14124.035289,
+          "crestFactor": 4.255502
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/12 - m1_mechanically_imbalanced_electrically_100_ohm_fault_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 105232,
+        "category": "Compound mechanical + electrical fault",
+        "operatingLoad": "no mechanical load",
+        "electricalCondition": "100 \u03a9 simulated electrical fault",
+        "timestamp": {
+          "first": 1740575256.0,
+          "last": 1944586168.0,
+          "medianIntervalTicksFirst10000": 1940.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 248.578864,
+            "AccY": -172.374838,
+            "AccZ": 16193.947459
+          },
+          "axisStd": {
+            "AccX": 2026.71901,
+            "AccY": 1752.024598,
+            "AccZ": 2430.72856
+          },
+          "axisMin": {
+            "AccX": -6917.0,
+            "AccY": -4910.0,
+            "AccZ": 6165.0
+          },
+          "axisMax": {
+            "AccX": 7485.0,
+            "AccY": 5004.0,
+            "AccZ": 26300.0
+          },
+          "centeredVectorRms": 3617.40535,
+          "centeredVectorPeak": 13464.506871,
+          "crestFactor": 3.722145
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/13 - m1_mechanically_imbalanced_electrically_150_ohm_fault_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 101613,
+        "category": "Compound mechanical + electrical fault",
+        "operatingLoad": "no mechanical load",
+        "electricalCondition": "50 \u03a9 simulated electrical fault",
+        "timestamp": {
+          "first": 2208508332.0,
+          "last": 2405629180.0,
+          "medianIntervalTicksFirst10000": 1940.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 239.302343,
+            "AccY": -176.528249,
+            "AccZ": 16207.410932
+          },
+          "axisStd": {
+            "AccX": 2136.08631,
+            "AccY": 2034.216556,
+            "AccZ": 2465.338936
+          },
+          "axisMin": {
+            "AccX": -7707.0,
+            "AccY": -5958.0,
+            "AccZ": 5551.0
+          },
+          "axisMax": {
+            "AccX": 8333.0,
+            "AccY": 5656.0,
+            "AccZ": 26052.0
+          },
+          "centeredVectorRms": 3844.320198,
+          "centeredVectorPeak": 14597.445718,
+          "crestFactor": 3.797146
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/14 - m1_mechanically_imbalanced_electrically_50_ohm_fault_load_0.5Nm_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 150463,
+        "category": "Compound mechanical + electrical fault",
+        "operatingLoad": "0.5 Nm load",
+        "electricalCondition": "50 \u03a9 simulated electrical fault",
+        "timestamp": {
+          "first": 82348.0,
+          "last": 646205740.0,
+          "medianIntervalTicksFirst10000": 1904.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 238.550095,
+            "AccY": -169.329417,
+            "AccZ": 16190.58413
+          },
+          "axisStd": {
+            "AccX": 1996.478712,
+            "AccY": 1749.413606,
+            "AccZ": 2296.433566
+          },
+          "axisMin": {
+            "AccX": -7107.0,
+            "AccY": -5801.0,
+            "AccZ": 6811.0
+          },
+          "axisMax": {
+            "AccX": 7510.0,
+            "AccY": 4365.0,
+            "AccZ": 25400.0
+          },
+          "centeredVectorRms": 3509.983238,
+          "centeredVectorPeak": 13177.61049,
+          "crestFactor": 3.754323
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/15 - m1_with_m2_mechanicaly_umbalanced_on_background_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 102111,
+        "category": "Mechanical fault (shaft imbalance/misalignment context)",
+        "operatingLoad": "no mechanical load",
+        "electricalCondition": "none specified",
+        "timestamp": {
+          "first": 271091720.0,
+          "last": 464360280.0,
+          "medianIntervalTicksFirst10000": 1892.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 295.852993,
+            "AccY": -184.406783,
+            "AccZ": 16202.59688
+          },
+          "axisStd": {
+            "AccX": 1779.827391,
+            "AccY": 586.206202,
+            "AccZ": 2440.435758
+          },
+          "axisMin": {
+            "AccX": -6854.0,
+            "AccY": -2751.0,
+            "AccZ": 5971.0
+          },
+          "axisMax": {
+            "AccX": 6510.0,
+            "AccY": 2264.0,
+            "AccZ": 27092.0
+          },
+          "centeredVectorRms": 3076.873403,
+          "centeredVectorPeak": 13277.307667,
+          "crestFactor": 4.315195
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/16 - m1_mechanically_imbalanced_with_m2_normal_on_background_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 153466,
+        "category": "Mechanical fault (shaft imbalance/misalignment context)",
+        "operatingLoad": "no mechanical load",
+        "electricalCondition": "none specified",
+        "timestamp": {
+          "first": 200.0,
+          "last": 362484588.0,
+          "medianIntervalTicksFirst10000": 1856.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 227.712262,
+            "AccY": -140.242099,
+            "AccZ": 16134.208515
+          },
+          "axisStd": {
+            "AccX": 912.780331,
+            "AccY": 629.222229,
+            "AccZ": 1556.037887
+          },
+          "axisMin": {
+            "AccX": -4477.0,
+            "AccY": -2472.0,
+            "AccZ": 9468.0
+          },
+          "axisMax": {
+            "AccX": 4910.0,
+            "AccY": 2513.0,
+            "AccZ": 22528.0
+          },
+          "centeredVectorRms": 1910.586939,
+          "centeredVectorPeak": 8579.763812,
+          "crestFactor": 4.490643
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/17 - m1_mechanically_imbalanced_with_m2_mechanicaly_imbalanced_on_background_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 155047,
+        "category": "Mechanical fault (shaft imbalance/misalignment context)",
+        "operatingLoad": "no mechanical load",
+        "electricalCondition": "none specified",
+        "timestamp": {
+          "first": 2656.0,
+          "last": 283064708.0,
+          "medianIntervalTicksFirst10000": 1832.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 224.906615,
+            "AccY": -139.527634,
+            "AccZ": 16132.329629
+          },
+          "axisStd": {
+            "AccX": 855.205158,
+            "AccY": 635.158009,
+            "AccZ": 1560.845316
+          },
+          "axisMin": {
+            "AccX": -3842.0,
+            "AccY": -2375.0,
+            "AccZ": 8700.0
+          },
+          "axisMax": {
+            "AccX": 4307.0,
+            "AccY": 2423.0,
+            "AccZ": 23492.0
+          },
+          "centeredVectorRms": 1889.719466,
+          "centeredVectorPeak": 8858.304465,
+          "crestFactor": 4.687629
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/18 - m1_load_0.5Nm_m2_mechanically_imbalanced_on_background_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 104468,
+        "category": "Mechanical fault (shaft imbalance/misalignment context)",
+        "operatingLoad": "0.5 Nm load",
+        "electricalCondition": "none specified",
+        "timestamp": {
+          "first": 511016364.0,
+          "last": 708816148.0,
+          "medianIntervalTicksFirst10000": 1892.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 293.751809,
+            "AccY": -185.07184,
+            "AccZ": 16209.459366
+          },
+          "axisStd": {
+            "AccX": 1754.460804,
+            "AccY": 617.227194,
+            "AccZ": 2296.65299
+          },
+          "axisMin": {
+            "AccX": -6325.0,
+            "AccY": -8629.0,
+            "AccZ": 7219.0
+          },
+          "axisMax": {
+            "AccX": 6821.0,
+            "AccY": 2357.0,
+            "AccZ": 25336.0
+          },
+          "centeredVectorRms": 2955.286293,
+          "centeredVectorPeak": 14085.508235,
+          "crestFactor": 4.766208
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/19 - m1_mechanically_imbalanced_load_0.5Nm_m2_mechanically_imbalanced_on_background_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 151016,
+        "category": "Mechanical fault (shaft imbalance/misalignment context)",
+        "operatingLoad": "0.5 Nm load",
+        "electricalCondition": "none specified",
+        "timestamp": {
+          "first": 2006308.0,
+          "last": 286638712.0,
+          "medianIntervalTicksFirst10000": 1848.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 240.488187,
+            "AccY": -122.46058,
+            "AccZ": 16131.185941
+          },
+          "axisStd": {
+            "AccX": 1770.906885,
+            "AccY": 1090.666077,
+            "AccZ": 2029.403364
+          },
+          "axisMin": {
+            "AccX": -6313.0,
+            "AccY": -3478.0,
+            "AccZ": 7647.0
+          },
+          "axisMax": {
+            "AccX": 7188.0,
+            "AccY": 3222.0,
+            "AccZ": 30921.0
+          },
+          "centeredVectorRms": 2905.880538,
+          "centeredVectorPeak": 16681.311852,
+          "crestFactor": 5.740536
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/20 - m1_electrically_50_ohm_fault_m2_imbalanced_on_background_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 111743,
+        "category": "Electrical fault",
+        "operatingLoad": "no mechanical load",
+        "electricalCondition": "50 \u03a9 simulated electrical fault",
+        "timestamp": {
+          "first": 1531693120.0,
+          "last": 1747736648.0,
+          "medianIntervalTicksFirst10000": 1936.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 290.27872,
+            "AccY": -185.944086,
+            "AccZ": 16200.678468
+          },
+          "axisStd": {
+            "AccX": 1782.11468,
+            "AccY": 915.855865,
+            "AccZ": 2474.683294
+          },
+          "axisMin": {
+            "AccX": -5999.0,
+            "AccY": -3448.0,
+            "AccZ": -1.0
+          },
+          "axisMax": {
+            "AccX": 6253.0,
+            "AccY": 2587.0,
+            "AccZ": 26187.0
+          },
+          "centeredVectorRms": 3184.145428,
+          "centeredVectorPeak": 17683.054622,
+          "crestFactor": 5.55347
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/21 - m1_electrically_50_ohm_fault_load_0.5Nm_m2_mechanically_imbalanced_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 107380,
+        "category": "Compound mechanical + electrical fault",
+        "operatingLoad": "0.5 Nm load",
+        "electricalCondition": "50 \u03a9 simulated electrical fault",
+        "timestamp": {
+          "first": 1271797544.0,
+          "last": 1479669948.0,
+          "medianIntervalTicksFirst10000": 1936.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 287.506565,
+            "AccY": -187.489858,
+            "AccZ": 16212.338964
+          },
+          "axisStd": {
+            "AccX": 1780.627499,
+            "AccY": 1085.864578,
+            "AccZ": 2391.90385
+          },
+          "axisMin": {
+            "AccX": -6720.0,
+            "AccY": -3388.0,
+            "AccZ": -1.0
+          },
+          "axisMax": {
+            "AccX": 6753.0,
+            "AccY": 3301.0,
+            "AccZ": 26435.0
+          },
+          "centeredVectorRms": 3173.474469,
+          "centeredVectorPeak": 18004.084818,
+          "crestFactor": 5.673304
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/22 - m1_electrically_100_ohm_fault_m2_mechanically_imbalanced_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 104434,
+        "category": "Compound mechanical + electrical fault",
+        "operatingLoad": "no mechanical load",
+        "electricalCondition": "100 \u03a9 simulated electrical fault",
+        "timestamp": {
+          "first": 1988.0,
+          "last": 198049316.0,
+          "medianIntervalTicksFirst10000": 1844.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 299.714126,
+            "AccY": -186.274882,
+            "AccZ": 16210.871143
+          },
+          "axisStd": {
+            "AccX": 1767.912005,
+            "AccY": 1194.338464,
+            "AccZ": 2327.492639
+          },
+          "axisMin": {
+            "AccX": -5853.0,
+            "AccY": -4736.0,
+            "AccZ": 6747.0
+          },
+          "axisMax": {
+            "AccX": 6959.0,
+            "AccY": 17667.0,
+            "AccZ": 25651.0
+          },
+          "centeredVectorRms": 3157.400704,
+          "centeredVectorPeak": 21275.581529,
+          "crestFactor": 6.738322
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/23 - m1_electrically_100_ohm_fault_load_0.5Nm_m2_mechanically_imbalanced_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 108170,
+        "category": "Compound mechanical + electrical fault",
+        "operatingLoad": "0.5 Nm load",
+        "electricalCondition": "100 \u03a9 simulated electrical fault",
+        "timestamp": {
+          "first": 2924047784.0,
+          "last": 3133817640.0,
+          "medianIntervalTicksFirst10000": 1940.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 308.805907,
+            "AccY": -184.142461,
+            "AccZ": 16202.576389
+          },
+          "axisStd": {
+            "AccX": 1799.676924,
+            "AccY": 1382.602057,
+            "AccZ": 2506.89902
+          },
+          "axisMin": {
+            "AccX": -7014.0,
+            "AccY": -4217.0,
+            "AccZ": -1.0
+          },
+          "axisMax": {
+            "AccX": 6780.0,
+            "AccY": 3902.0,
+            "AccZ": 27791.0
+          },
+          "centeredVectorRms": 3381.562978,
+          "centeredVectorPeak": 18244.887897,
+          "crestFactor": 5.395401
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/24 - m1_electrically_150_ohm_fault_m2_imbalanced_on_background_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 102918,
+        "category": "Electrical fault",
+        "operatingLoad": "no mechanical load",
+        "electricalCondition": "50 \u03a9 simulated electrical fault",
+        "timestamp": {
+          "first": 241739676.0,
+          "last": 437335352.0,
+          "medianIntervalTicksFirst10000": 1900.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 301.833314,
+            "AccY": -185.387998,
+            "AccZ": 16209.958112
+          },
+          "axisStd": {
+            "AccX": 1784.224023,
+            "AccY": 1372.847925,
+            "AccZ": 2354.865297
+          },
+          "axisMin": {
+            "AccX": -6215.0,
+            "AccY": -5335.0,
+            "AccZ": -1.0
+          },
+          "axisMax": {
+            "AccX": 6312.0,
+            "AccY": 3993.0,
+            "AccZ": 25462.0
+          },
+          "centeredVectorRms": 3257.845508,
+          "centeredVectorPeak": 18214.905521,
+          "crestFactor": 5.591089
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/25 - m1_mechanically_imbalanced_electrically_50_ohm_fault_m2_imbalanced_on_background_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 102953,
+        "category": "Compound mechanical + electrical fault",
+        "operatingLoad": "no mechanical load",
+        "electricalCondition": "50 \u03a9 simulated electrical fault",
+        "timestamp": {
+          "first": 1881372344.0,
+          "last": 2081000532.0,
+          "medianIntervalTicksFirst10000": 1940.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 313.326877,
+            "AccY": -162.284042,
+            "AccZ": 16171.224423
+          },
+          "axisStd": {
+            "AccX": 1927.860263,
+            "AccY": 1447.437344,
+            "AccZ": 2335.986126
+          },
+          "axisMin": {
+            "AccX": -6275.0,
+            "AccY": -5413.0,
+            "AccZ": 0.0
+          },
+          "axisMax": {
+            "AccX": 8120.0,
+            "AccY": 4536.0,
+            "AccZ": 25304.0
+          },
+          "centeredVectorRms": 3356.866283,
+          "centeredVectorPeak": 18708.892609,
+          "crestFactor": 5.573321
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/26 - m1_mechanically_umbalanced_electrically_50_ohm_fault_load_0.5Nm_m2_umbalanced_on_background_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 146328,
+        "category": "Compound mechanical + electrical fault",
+        "operatingLoad": "0.5 Nm load",
+        "electricalCondition": "50 \u03a9 simulated electrical fault",
+        "timestamp": {
+          "first": 759915256.0,
+          "last": 1039253456.0,
+          "medianIntervalTicksFirst10000": 1904.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 236.708825,
+            "AccY": -169.266203,
+            "AccZ": 16191.515417
+          },
+          "axisStd": {
+            "AccX": 2001.635343,
+            "AccY": 1767.75527,
+            "AccZ": 2354.867306
+          },
+          "axisMin": {
+            "AccX": -7363.0,
+            "AccY": -6144.0,
+            "AccZ": 6044.0
+          },
+          "axisMax": {
+            "AccX": 7213.0,
+            "AccY": 4230.0,
+            "AccZ": 27052.0
+          },
+          "centeredVectorRms": 3560.463842,
+          "centeredVectorPeak": 14539.709197,
+          "crestFactor": 4.083656
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/27 - m1_mechanically_imbalanced_electrically_100_ohm_fault_m2_imbalanced_on_background_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 110081,
+        "category": "Compound mechanical + electrical fault",
+        "operatingLoad": "no mechanical load",
+        "electricalCondition": "100 \u03a9 simulated electrical fault",
+        "timestamp": {
+          "first": 1499121376.0,
+          "last": 1712525848.0,
+          "medianIntervalTicksFirst10000": 1940.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 244.716118,
+            "AccY": -174.073882,
+            "AccZ": 16211.393129
+          },
+          "axisStd": {
+            "AccX": 2043.611865,
+            "AccY": 1771.621235,
+            "AccZ": 2506.9782
+          },
+          "axisMin": {
+            "AccX": -7030.0,
+            "AccY": -5348.0,
+            "AccZ": 6321.0
+          },
+          "axisMax": {
+            "AccX": 8066.0,
+            "AccY": 5177.0,
+            "AccZ": 26280.0
+          },
+          "centeredVectorRms": 3687.808421,
+          "centeredVectorPeak": 13826.905568,
+          "crestFactor": 3.749356
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/28 - m1_mechanically_imbalanced_electrically_100_ohm_fault_load_0.5Nm_m2_imbalanced_on_background_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 136361,
+        "category": "Compound mechanical + electrical fault",
+        "operatingLoad": "0.5 Nm load",
+        "electricalCondition": "100 \u03a9 simulated electrical fault",
+        "timestamp": {
+          "first": 1209745704.0,
+          "last": 1474122460.0,
+          "medianIntervalTicksFirst10000": 1940.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 238.040679,
+            "AccY": -174.558033,
+            "AccZ": 16202.357896
+          },
+          "axisStd": {
+            "AccX": 2144.505807,
+            "AccY": 2342.911653,
+            "AccZ": 2422.27859
+          },
+          "axisMin": {
+            "AccX": -8125.0,
+            "AccY": -7267.0,
+            "AccZ": 6568.0
+          },
+          "axisMax": {
+            "AccX": 8473.0,
+            "AccY": 5197.0,
+            "AccZ": 26276.0
+          },
+          "centeredVectorRms": 3994.442857,
+          "centeredVectorPeak": 14890.313888,
+          "crestFactor": 3.727757
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/29 - m1_mechanically_imbalanced_electrically_150_ohm_fault_m2_imbalanced_on_background_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 102432,
+        "category": "Compound mechanical + electrical fault",
+        "operatingLoad": "no mechanical load",
+        "electricalCondition": "50 \u03a9 simulated electrical fault",
+        "timestamp": {
+          "first": 2571840324.0,
+          "last": 2770495780.0,
+          "medianIntervalTicksFirst10000": 1940.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 241.127333,
+            "AccY": -176.538055,
+            "AccZ": 16212.259392
+          },
+          "axisStd": {
+            "AccX": 2164.281561,
+            "AccY": 2083.522528,
+            "AccZ": 2535.734388
+          },
+          "axisMin": {
+            "AccX": -7136.0,
+            "AccY": -5755.0,
+            "AccZ": 5536.0
+          },
+          "axisMax": {
+            "AccX": 8378.0,
+            "AccY": 6503.0,
+            "AccZ": 26128.0
+          },
+          "centeredVectorRms": 3931.301271,
+          "centeredVectorPeak": 14993.57996,
+          "crestFactor": 3.813897
+        },
+        "missingValues": {}
+      },
+      {
+        "name": "Data/30 - m1_mechanically_imbalanced_electrically_150_ohm_fault_m2_imbalanced_on_background_rotated_half_speed.csv",
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "recordCount": 101405,
+        "category": "Compound mechanical + electrical fault",
+        "operatingLoad": "no mechanical load",
+        "electricalCondition": "50 \u03a9 simulated electrical fault",
+        "timestamp": {
+          "first": 2872220040.0,
+          "last": 3068875964.0,
+          "medianIntervalTicksFirst10000": 1940.0,
+          "note": "Timestamp retained as source ticks; README does not establish a physical unit, so no sampling rate or frequency-domain Hz is asserted."
+        },
+        "features": {
+          "axisMean": {
+            "AccX": 236.4783,
+            "AccY": -175.898141,
+            "AccZ": 16210.815413
+          },
+          "axisStd": {
+            "AccX": 2159.89746,
+            "AccY": 2062.716572,
+            "AccZ": 2496.650326
+          },
+          "axisMin": {
+            "AccX": -7108.0,
+            "AccY": -5589.0,
+            "AccZ": 5266.0
+          },
+          "axisMax": {
+            "AccX": 7785.0,
+            "AccY": 5740.0,
+            "AccZ": 25812.0
+          },
+          "centeredVectorRms": 3892.713648,
+          "centeredVectorPeak": 14552.216845,
+          "crestFactor": 3.738322
+        },
+        "missingValues": {}
+      }
+    ],
+    "analysisStatus": "Loaded / time-domain features calculated"
+  }
+}

@@ -12,6 +12,7 @@ import {
   buildScenarioAnalysis
 } from "./fleetData";
 import { evaluateMachineTelemetry } from "../shared/riskEngine";
+import { getRealDatasetCatalog, getRealDatasetManifest, getRealDatasetStatus } from "./datasetAnalysis";
 import fs from "fs";
 import path from "path";
 
@@ -236,12 +237,23 @@ export const appRouter = router({
 
   datasets: router({
     listCatalogs: publicProcedure.query(() => {
-      return DATASETS_CATALOG;
+      const realCatalog = getRealDatasetCatalog();
+      return realCatalog.length > 0 ? realCatalog : DATASETS_CATALOG;
     }),
+
+    getRealStatus: publicProcedure.query(() => getRealDatasetStatus()),
 
     getAI4ISamples: publicProcedure
       .input(z.object({ limit: z.number().default(20), onlyFailures: z.boolean().default(false) }))
       .query(({ input }) => {
+        const realManifest = getRealDatasetManifest();
+        if (realManifest?.ai4i.sampleRows?.length) {
+          let data = realManifest.ai4i.sampleRows;
+          if (input.onlyFailures) {
+            data = data.filter((row) => row["Machine failure"] === "1");
+          }
+          return data.slice(0, input.limit);
+        }
         try {
           const samplePath = path.resolve(process.cwd(), "data/ai4i_benchmark_sample.json");
           if (fs.existsSync(samplePath)) {

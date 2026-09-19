@@ -1,0 +1,2009 @@
+{
+  "ai4i": {
+    "path": "/home/ubuntu/upload/ai4i2020.csv",
+    "recordCount": 10000,
+    "columns": [
+      "UDI",
+      "Product ID",
+      "Type",
+      "Air temperature [K]",
+      "Process temperature [K]",
+      "Rotational speed [rpm]",
+      "Torque [Nm]",
+      "Tool wear [min]",
+      "Machine failure",
+      "TWF",
+      "HDF",
+      "PWF",
+      "OSF",
+      "RNF"
+    ],
+    "missing": {},
+    "numericSummary": {
+      "UDI": {
+        "min": 1.0,
+        "max": 10000.0,
+        "mean": 5000.5,
+        "stdev": 2886.751331514372
+      },
+      "Air temperature [K]": {
+        "min": 295.3,
+        "max": 304.5,
+        "mean": 300.00493,
+        "stdev": 2.0001586674811573
+      },
+      "Process temperature [K]": {
+        "min": 305.7,
+        "max": 313.8,
+        "mean": 310.00556,
+        "stdev": 1.483660030600002
+      },
+      "Rotational speed [rpm]": {
+        "min": 1168.0,
+        "max": 2886.0,
+        "mean": 1538.7761,
+        "stdev": 179.27513148451462
+      },
+      "Torque [Nm]": {
+        "min": 3.8,
+        "max": 76.6,
+        "mean": 39.986909999999995,
+        "stdev": 9.96843526597329
+      },
+      "Tool wear [min]": {
+        "min": 0.0,
+        "max": 253.0,
+        "mean": 107.951,
+        "stdev": 63.65096384973287
+      },
+      "Machine failure": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.0339,
+        "stdev": 0.18097179338228375
+      },
+      "TWF": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.0046,
+        "stdev": 0.06766712643521963
+      },
+      "HDF": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.0115,
+        "stdev": 0.10661965109678422
+      },
+      "PWF": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.0095,
+        "stdev": 0.09700386590234432
+      },
+      "OSF": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.0098,
+        "stdev": 0.09850867982061276
+      },
+      "RNF": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.0019,
+        "stdev": 0.043547560207203344
+      }
+    },
+    "categoricalSummary": {
+      "Product ID": [
+        [
+          "M14860",
+          1
+        ],
+        [
+          "L47181",
+          1
+        ],
+        [
+          "L47182",
+          1
+        ],
+        [
+          "L47183",
+          1
+        ],
+        [
+          "L47184",
+          1
+        ],
+        [
+          "M14865",
+          1
+        ],
+        [
+          "L47186",
+          1
+        ],
+        [
+          "L47187",
+          1
+        ],
+        [
+          "M14868",
+          1
+        ],
+        [
+          "M14869",
+          1
+        ],
+        [
+          "H29424",
+          1
+        ],
+        [
+          "H29425",
+          1
+        ],
+        [
+          "M14872",
+          1
+        ],
+        [
+          "M14873",
+          1
+        ],
+        [
+          "L47194",
+          1
+        ],
+        [
+          "L47195",
+          1
+        ],
+        [
+          "M14876",
+          1
+        ],
+        [
+          "M14877",
+          1
+        ],
+        [
+          "H29432",
+          1
+        ],
+        [
+          "M14879",
+          1
+        ]
+      ],
+      "Type": [
+        [
+          "L",
+          6000
+        ],
+        [
+          "M",
+          2997
+        ],
+        [
+          "H",
+          1003
+        ]
+      ]
+    },
+    "failureDistributions": {
+      "Machine failure": {
+        "0": 9661,
+        "1": 339
+      }
+    },
+    "sampleRows": [
+      {
+        "UDI": "1",
+        "Product ID": "M14860",
+        "Type": "M",
+        "Air temperature [K]": "298.1",
+        "Process temperature [K]": "308.6",
+        "Rotational speed [rpm]": "1551",
+        "Torque [Nm]": "42.8",
+        "Tool wear [min]": "0",
+        "Machine failure": "0",
+        "TWF": "0",
+        "HDF": "0",
+        "PWF": "0",
+        "OSF": "0",
+        "RNF": "0"
+      },
+      {
+        "UDI": "2",
+        "Product ID": "L47181",
+        "Type": "L",
+        "Air temperature [K]": "298.2",
+        "Process temperature [K]": "308.7",
+        "Rotational speed [rpm]": "1408",
+        "Torque [Nm]": "46.3",
+        "Tool wear [min]": "3",
+        "Machine failure": "0",
+        "TWF": "0",
+        "HDF": "0",
+        "PWF": "0",
+        "OSF": "0",
+        "RNF": "0"
+      },
+      {
+        "UDI": "3",
+        "Product ID": "L47182",
+        "Type": "L",
+        "Air temperature [K]": "298.1",
+        "Process temperature [K]": "308.5",
+        "Rotational speed [rpm]": "1498",
+        "Torque [Nm]": "49.4",
+        "Tool wear [min]": "5",
+        "Machine failure": "0",
+        "TWF": "0",
+        "HDF": "0",
+        "PWF": "0",
+        "OSF": "0",
+        "RNF": "0"
+      },
+      {
+        "UDI": "4",
+        "Product ID": "L47183",
+        "Type": "L",
+        "Air temperature [K]": "298.2",
+        "Process temperature [K]": "308.6",
+        "Rotational speed [rpm]": "1433",
+        "Torque [Nm]": "39.5",
+        "Tool wear [min]": "7",
+        "Machine failure": "0",
+        "TWF": "0",
+        "HDF": "0",
+        "PWF": "0",
+        "OSF": "0",
+        "RNF": "0"
+      },
+      {
+        "UDI": "5",
+        "Product ID": "L47184",
+        "Type": "L",
+        "Air temperature [K]": "298.2",
+        "Process temperature [K]": "308.7",
+        "Rotational speed [rpm]": "1408",
+        "Torque [Nm]": "40.0",
+        "Tool wear [min]": "9",
+        "Machine failure": "0",
+        "TWF": "0",
+        "HDF": "0",
+        "PWF": "0",
+        "OSF": "0",
+        "RNF": "0"
+      }
+    ]
+  },
+  "soonPemp": {
+    "path": "/home/ubuntu/upload/SOON-pEMP.zip",
+    "fileCount": 30,
+    "commonColumnSets": [
+      {
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "files": 30
+      }
+    ],
+    "files": [
+      {
+        "name": "Data/01 - m1_half_shaft_speed_no_mechanical_load.csv",
+        "recordCount": 107346,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 2141864.0,
+            "max": 203405364.0,
+            "mean": 102262492.44346319,
+            "stdev": 58144230.63066838
+          },
+          "AccX": {
+            "min": -5986.0,
+            "max": 6406.0,
+            "mean": 297.07569914109513,
+            "stdev": 1774.0972265486885
+          },
+          "AccY": {
+            "min": -2884.0,
+            "max": 2003.0,
+            "mean": -185.44388239897154,
+            "stdev": 593.1343979171843
+          },
+          "AccZ": {
+            "min": 5296.0,
+            "max": 25580.0,
+            "mean": 16202.95509846664,
+            "stdev": 2433.0969028170057
+          }
+        },
+        "sampleRows": [
+          [
+            "2141864",
+            "3624",
+            "-567",
+            "17452"
+          ],
+          [
+            "2143688",
+            "-649",
+            "-688",
+            "16899"
+          ],
+          [
+            "2145492",
+            "-21",
+            "-66",
+            "14555"
+          ]
+        ]
+      },
+      {
+        "name": "Data/02 - m1_load_0.5Nm_half_speed.csv",
+        "recordCount": 102909,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 252357968.0,
+            "max": 447221856.0,
+            "mean": 349787154.61975145,
+            "stdev": 56253614.757692926
+          },
+          "AccX": {
+            "min": -6228.0,
+            "max": 6935.0,
+            "mean": 295.71884869156247,
+            "stdev": 1744.2296673603694
+          },
+          "AccY": {
+            "min": -2598.0,
+            "max": 2295.0,
+            "mean": -184.13099923233148,
+            "stdev": 606.3539680623177
+          },
+          "AccZ": {
+            "min": 7099.0,
+            "max": 25044.0,
+            "mean": 16201.044534491639,
+            "stdev": 2276.0162500960496
+          }
+        },
+        "sampleRows": [
+          [
+            "252357968",
+            "-260",
+            "630",
+            "17304"
+          ],
+          [
+            "252359868",
+            "2531",
+            "307",
+            "12217"
+          ],
+          [
+            "252361748",
+            "2877",
+            "-77",
+            "15060"
+          ]
+        ]
+      },
+      {
+        "name": "Data/03 - m1_mechanically_imbalanced_half_speed.csv",
+        "recordCount": 100514,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 2648.0,
+            "max": 188795208.0,
+            "mean": 93895320.30654436,
+            "stdev": 54549894.97456513
+          },
+          "AccX": {
+            "min": -4920.0,
+            "max": 5623.0,
+            "mean": 232.13206120540423,
+            "stdev": 1291.0454681805443
+          },
+          "AccY": {
+            "min": -4326.0,
+            "max": 3424.0,
+            "mean": -146.2480947927652,
+            "stdev": 1209.6088483856606
+          },
+          "AccZ": {
+            "min": -167.0,
+            "max": 22130.0,
+            "mean": 16135.785572159102,
+            "stdev": 1330.0250177042128
+          }
+        },
+        "sampleRows": [
+          [
+            "2648",
+            "-90",
+            "-980",
+            "15524"
+          ],
+          [
+            "4344",
+            "-162",
+            "734",
+            "14627"
+          ],
+          [
+            "6168",
+            "1197",
+            "1265",
+            "16120"
+          ]
+        ]
+      },
+      {
+        "name": "Data/04 - m1_mechanically_imbalanced_half_speed.csv",
+        "recordCount": 142799,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 2680.0,
+            "max": 266850916.0,
+            "mean": 131611375.60041738,
+            "stdev": 77218909.07971479
+          },
+          "AccX": {
+            "min": -8560.0,
+            "max": 8333.0,
+            "mean": 255.51851903724815,
+            "stdev": 3422.8767579763453
+          },
+          "AccY": {
+            "min": -8459.0,
+            "max": 9452.0,
+            "mean": -87.14759206997248,
+            "stdev": 3252.7924298830308
+          },
+          "AccZ": {
+            "min": -2590.0,
+            "max": 32764.0,
+            "mean": 16081.542209679339,
+            "stdev": 4690.543135051669
+          }
+        },
+        "sampleRows": [
+          [
+            "2680",
+            "-3250",
+            "-4112",
+            "11856"
+          ],
+          [
+            "4416",
+            "-4791",
+            "-3815",
+            "24868"
+          ],
+          [
+            "6260",
+            "-994",
+            "3074",
+            "13919"
+          ]
+        ]
+      },
+      {
+        "name": "Data/05 - m1_mechanically_imbalanced_load_0.5Nm_half_speed.csv",
+        "recordCount": 151123,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 88.0,
+            "max": 284953412.0,
+            "mean": 142846960.52184644,
+            "stdev": 81203039.95714425
+          },
+          "AccX": {
+            "min": -6045.0,
+            "max": 5776.0,
+            "mean": 238.91191222985404,
+            "stdev": 1094.1141043477332
+          },
+          "AccY": {
+            "min": -3475.0,
+            "max": 3202.0,
+            "mean": -134.68489035348924,
+            "stdev": 1048.890165620279
+          },
+          "AccZ": {
+            "min": 8496.0,
+            "max": 25456.0,
+            "mean": 16132.549972869601,
+            "stdev": 1369.6937960449413
+          }
+        },
+        "sampleRows": [
+          [
+            "4683088",
+            "-1243",
+            "-1429",
+            "14003"
+          ],
+          [
+            "4684940",
+            "-718",
+            "-1364",
+            "16252"
+          ],
+          [
+            "4686784",
+            "-1899",
+            "-89",
+            "17776"
+          ]
+        ]
+      },
+      {
+        "name": "Data/06 - m1_electrically_50_ohm_fault_half_speed.csv",
+        "recordCount": 104293,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 749374180.0,
+            "max": 947246224.0,
+            "mean": 848311277.6569473,
+            "stdev": 57119265.38024962
+          },
+          "AccX": {
+            "min": -6187.0,
+            "max": 6828.0,
+            "mean": 295.72744095960417,
+            "stdev": 1782.1848163554428
+          },
+          "AccY": {
+            "min": -3469.0,
+            "max": 2686.0,
+            "mean": -185.45676123996816,
+            "stdev": 905.6276773687134
+          },
+          "AccZ": {
+            "min": -159.0,
+            "max": 29686.0,
+            "mean": 16207.302263814447,
+            "stdev": 2482.650723002137
+          }
+        },
+        "sampleRows": [
+          [
+            "749374180",
+            "905",
+            "-919",
+            "15084"
+          ],
+          [
+            "749376076",
+            "-2782",
+            "492",
+            "21424"
+          ],
+          [
+            "749377980",
+            "-124",
+            "1486",
+            "14028"
+          ]
+        ]
+      },
+      {
+        "name": "Data/07 - m1_electrically_100_ohm_fault_half_speed.csv",
+        "recordCount": 101854,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 2452282256.0,
+            "max": 2649531380.0,
+            "mean": 2550913568.727983,
+            "stdev": 56943526.343758695
+          },
+          "AccX": {
+            "min": -6451.0,
+            "max": 6642.0,
+            "mean": 293.46084591670433,
+            "stdev": 1829.9078815134596
+          },
+          "AccY": {
+            "min": -4572.0,
+            "max": 3589.0,
+            "mean": -183.50576315117718,
+            "stdev": 1231.7722356738177
+          },
+          "AccZ": {
+            "min": -1.0,
+            "max": 26976.0,
+            "mean": 16212.580635026607,
+            "stdev": 2657.036855060392
+          }
+        },
+        "sampleRows": [
+          [
+            "2452282256",
+            "-877",
+            "1133",
+            "16739"
+          ],
+          [
+            "2452284196",
+            "-1034",
+            "709",
+            "16772"
+          ],
+          [
+            "2452286104",
+            "-583",
+            "-5",
+            "18923"
+          ]
+        ]
+      },
+      {
+        "name": "Data/08 - m1_electrically_150_ohm_fault_half_speed.csv",
+        "recordCount": 107174,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 590774624.0,
+            "max": 794074712.0,
+            "mean": 692478461.45651,
+            "stdev": 58671548.98536708
+          },
+          "AccX": {
+            "min": -5471.0,
+            "max": 6826.0,
+            "mean": 298.3474909959505,
+            "stdev": 1260.7159140577776
+          },
+          "AccY": {
+            "min": -5142.0,
+            "max": 3538.0,
+            "mean": -184.79445574486348,
+            "stdev": 1337.0548691417887
+          },
+          "AccZ": {
+            "min": 7049.0,
+            "max": 24516.0,
+            "mean": 16209.861235001026,
+            "stdev": 1883.1127562804743
+          }
+        },
+        "sampleRows": [
+          [
+            "590774624",
+            "2132",
+            "-370",
+            "17191"
+          ],
+          [
+            "590776532",
+            "2771",
+            "671",
+            "10950"
+          ],
+          [
+            "590778432",
+            "2533",
+            "2297",
+            "14372"
+          ]
+        ]
+      },
+      {
+        "name": "Data/09 - m1_electrically_50_ohm_fault_load_0.5Nm_half_speed.csv",
+        "recordCount": 102782,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 995721304.0,
+            "max": 1194612552.0,
+            "mean": 1095123951.573544,
+            "stdev": 57435052.49400821
+          },
+          "AccX": {
+            "min": -6575.0,
+            "max": 6632.0,
+            "mean": 287.37869471308204,
+            "stdev": 1784.7986898973288
+          },
+          "AccY": {
+            "min": -3881.0,
+            "max": 3330.0,
+            "mean": -186.10227471736297,
+            "stdev": 1083.2180437024874
+          },
+          "AccZ": {
+            "min": -1.0,
+            "max": 25912.0,
+            "mean": 16210.05831760425,
+            "stdev": 2379.175765220309
+          }
+        },
+        "sampleRows": [
+          [
+            "995721304",
+            "-1262",
+            "-1088",
+            "18008"
+          ],
+          [
+            "995723228",
+            "-1770",
+            "-2405",
+            "17115"
+          ],
+          [
+            "995725156",
+            "-2168",
+            "-2676",
+            "14451"
+          ]
+        ]
+      },
+      {
+        "name": "Data/10 - m1_electrically_100_ohm_fault_load_0.5Nm_half_speed.csv",
+        "recordCount": 103376,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 2688858388.0,
+            "max": 2889300960.0,
+            "mean": 2789073132.1395683,
+            "stdev": 57864224.22529195
+          },
+          "AccX": {
+            "min": -6476.0,
+            "max": 6810.0,
+            "mean": 302.4007313109426,
+            "stdev": 1810.2329116255692
+          },
+          "AccY": {
+            "min": -4302.0,
+            "max": 3821.0,
+            "mean": -184.21153846153845,
+            "stdev": 1377.8141024457682
+          },
+          "AccZ": {
+            "min": -247.0,
+            "max": 26628.0,
+            "mean": 16192.658895681783,
+            "stdev": 2501.053910001429
+          }
+        },
+        "sampleRows": [
+          [
+            "2688858388",
+            "1777",
+            "529",
+            "17716"
+          ],
+          [
+            "2688860324",
+            "1992",
+            "644",
+            "12439"
+          ],
+          [
+            "2688862256",
+            "-160",
+            "1940",
+            "12654"
+          ]
+        ]
+      },
+      {
+        "name": "Data/11 - m1_mechanically_imbalanced_electrically_50_ohm_fault_half_speed.csv",
+        "recordCount": 150374,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 8516460.0,
+            "max": 292859240.0,
+            "mean": 150094613.61647624,
+            "stdev": 82220903.80581363
+          },
+          "AccX": {
+            "min": -6458.0,
+            "max": 7567.0,
+            "mean": 239.07178767606104,
+            "stdev": 1891.2956875095488
+          },
+          "AccY": {
+            "min": -4174.0,
+            "max": 4214.0,
+            "mean": -169.42942928963782,
+            "stdev": 1283.281355216379
+          },
+          "AccZ": {
+            "min": 4941.0,
+            "max": 25600.0,
+            "mean": 16191.572758588585,
+            "stdev": 2406.6550820445905
+          }
+        },
+        "sampleRows": [
+          [
+            "8516460",
+            "-3031",
+            "-1003",
+            "15199"
+          ],
+          [
+            "8518236",
+            "-3202",
+            "-1860",
+            "12520"
+          ],
+          [
+            "8520008",
+            "-915",
+            "-1751",
+            "17069"
+          ]
+        ]
+      },
+      {
+        "name": "Data/12 - m1_mechanically_imbalanced_electrically_100_ohm_fault_half_speed.csv",
+        "recordCount": 105232,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 1740575256.0,
+            "max": 1944586168.0,
+            "mean": 1842576545.0584233,
+            "stdev": 58893452.528865054
+          },
+          "AccX": {
+            "min": -6917.0,
+            "max": 7485.0,
+            "mean": 248.57886384369775,
+            "stdev": 2026.7190102136651
+          },
+          "AccY": {
+            "min": -4910.0,
+            "max": 5004.0,
+            "mean": -172.37483845218185,
+            "stdev": 1752.024597932913
+          },
+          "AccZ": {
+            "min": 6165.0,
+            "max": 26300.0,
+            "mean": 16193.947458947849,
+            "stdev": 2430.7285598346657
+          }
+        },
+        "sampleRows": [
+          [
+            "1740575256",
+            "-1516",
+            "1928",
+            "18268"
+          ],
+          [
+            "1740577208",
+            "2088",
+            "2488",
+            "18948"
+          ],
+          [
+            "1740579156",
+            "2965",
+            "2832",
+            "13796"
+          ]
+        ]
+      },
+      {
+        "name": "Data/13 - m1_mechanically_imbalanced_electrically_150_ohm_fault_half_speed.csv",
+        "recordCount": 101613,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 2208508332.0,
+            "max": 2405629180.0,
+            "mean": 2307060010.399299,
+            "stdev": 56903347.87519823
+          },
+          "AccX": {
+            "min": -7707.0,
+            "max": 8333.0,
+            "mean": 239.3023432041176,
+            "stdev": 2136.0863097351594
+          },
+          "AccY": {
+            "min": -5958.0,
+            "max": 5656.0,
+            "mean": -176.52824933817524,
+            "stdev": 2034.2165557533315
+          },
+          "AccZ": {
+            "min": 5551.0,
+            "max": 26052.0,
+            "mean": 16207.410931672128,
+            "stdev": 2465.338935739536
+          }
+        },
+        "sampleRows": [
+          [
+            "2208508332",
+            "-3015",
+            "-762",
+            "17504"
+          ],
+          [
+            "2208510264",
+            "106",
+            "-506",
+            "17935"
+          ],
+          [
+            "2208512208",
+            "2465",
+            "-133",
+            "15183"
+          ]
+        ]
+      },
+      {
+        "name": "Data/14 - m1_mechanically_imbalanced_electrically_50_ohm_fault_load_0.5Nm_half_speed.csv",
+        "recordCount": 150463,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 82348.0,
+            "max": 646205740.0,
+            "mean": 502938200.02860504,
+            "stdev": 82722511.61836216
+          },
+          "AccX": {
+            "min": -7107.0,
+            "max": 7510.0,
+            "mean": 238.5500953722842,
+            "stdev": 1996.4787123432152
+          },
+          "AccY": {
+            "min": -5801.0,
+            "max": 4365.0,
+            "mean": -169.32941653429748,
+            "stdev": 1749.413605599296
+          },
+          "AccZ": {
+            "min": 6811.0,
+            "max": 25400.0,
+            "mean": 16190.584130317753,
+            "stdev": 2296.433565515368
+          }
+        },
+        "sampleRows": [
+          [
+            "82348",
+            "-44",
+            "-1538",
+            "17140"
+          ],
+          [
+            "359684256",
+            "-2885",
+            "707",
+            "16040"
+          ],
+          [
+            "359686156",
+            "-498",
+            "1884",
+            "15288"
+          ]
+        ]
+      },
+      {
+        "name": "Data/15 - m1_with_m2_mechanicaly_umbalanced_on_background_half_speed.csv",
+        "recordCount": 102111,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 271091720.0,
+            "max": 464360280.0,
+            "mean": 367726244.80402696,
+            "stdev": 55792430.977450535
+          },
+          "AccX": {
+            "min": -6854.0,
+            "max": 6510.0,
+            "mean": 295.8529933112006,
+            "stdev": 1779.8273906870625
+          },
+          "AccY": {
+            "min": -2751.0,
+            "max": 2264.0,
+            "mean": -184.40678281478,
+            "stdev": 586.2062015460848
+          },
+          "AccZ": {
+            "min": 5971.0,
+            "max": 27092.0,
+            "mean": 16202.596879866029,
+            "stdev": 2440.4357580091128
+          }
+        },
+        "sampleRows": [
+          [
+            "271091720",
+            "-1471",
+            "-463",
+            "14658"
+          ],
+          [
+            "271093612",
+            "-780",
+            "-551",
+            "16844"
+          ],
+          [
+            "271095516",
+            "2473",
+            "-140",
+            "14367"
+          ]
+        ]
+      },
+      {
+        "name": "Data/16 - m1_mechanically_imbalanced_with_m2_normal_on_background_half_speed.csv",
+        "recordCount": 153466,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 200.0,
+            "max": 362484588.0,
+            "mean": 223311416.7463021,
+            "stdev": 80395845.0198022
+          },
+          "AccX": {
+            "min": -4477.0,
+            "max": 4910.0,
+            "mean": 227.7122619994005,
+            "stdev": 912.7803313797586
+          },
+          "AccY": {
+            "min": -2472.0,
+            "max": 2513.0,
+            "mean": -140.24209922719038,
+            "stdev": 629.2222286199777
+          },
+          "AccZ": {
+            "min": 9468.0,
+            "max": 22528.0,
+            "mean": 16134.20851524116,
+            "stdev": 1556.0378869270664
+          }
+        },
+        "sampleRows": [
+          [
+            "200",
+            "-195",
+            "597",
+            "17491"
+          ],
+          [
+            "83727056",
+            "-291",
+            "-441",
+            "15534"
+          ],
+          [
+            "83728924",
+            "871",
+            "-1245",
+            "15172"
+          ]
+        ]
+      },
+      {
+        "name": "Data/17 - m1_mechanically_imbalanced_with_m2_mechanicaly_imbalanced_on_background_half_speed.csv",
+        "recordCount": 155047,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 2656.0,
+            "max": 283064708.0,
+            "mean": 142104974.2146059,
+            "stdev": 81650406.99936678
+          },
+          "AccX": {
+            "min": -3842.0,
+            "max": 4307.0,
+            "mean": 224.90661541339077,
+            "stdev": 855.2051583828825
+          },
+          "AccY": {
+            "min": -2375.0,
+            "max": 2423.0,
+            "mean": -139.52763355627647,
+            "stdev": 635.1580094981376
+          },
+          "AccZ": {
+            "min": 8700.0,
+            "max": 23492.0,
+            "mean": 16132.329629080214,
+            "stdev": 1560.8453157651443
+          }
+        },
+        "sampleRows": [
+          [
+            "2656",
+            "632",
+            "-986",
+            "16780"
+          ],
+          [
+            "4352",
+            "333",
+            "-884",
+            "14665"
+          ],
+          [
+            "6172",
+            "-1785",
+            "-1104",
+            "17908"
+          ]
+        ]
+      },
+      {
+        "name": "Data/18 - m1_load_0.5Nm_m2_mechanically_imbalanced_on_background_half_speed.csv",
+        "recordCount": 104468,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 511016364.0,
+            "max": 708816148.0,
+            "mean": 609917185.5584486,
+            "stdev": 57102276.54025237
+          },
+          "AccX": {
+            "min": -6325.0,
+            "max": 6821.0,
+            "mean": 293.7518091664433,
+            "stdev": 1754.46080393728
+          },
+          "AccY": {
+            "min": -8629.0,
+            "max": 2357.0,
+            "mean": -185.0718401807252,
+            "stdev": 617.2271941167601
+          },
+          "AccZ": {
+            "min": 7219.0,
+            "max": 25336.0,
+            "mean": 16209.459365547345,
+            "stdev": 2296.652989519391
+          }
+        },
+        "sampleRows": [
+          [
+            "511016364",
+            "1965",
+            "-381",
+            "15878"
+          ],
+          [
+            "511018252",
+            "1074",
+            "71",
+            "14435"
+          ],
+          [
+            "511020148",
+            "3685",
+            "-569",
+            "12572"
+          ]
+        ]
+      },
+      {
+        "name": "Data/19 - m1_mechanically_imbalanced_load_0.5Nm_m2_mechanically_imbalanced_on_background_half_speed.csv",
+        "recordCount": 151016,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 2006308.0,
+            "max": 286638712.0,
+            "mean": 143500798.56282777,
+            "stdev": 82404631.97027479
+          },
+          "AccX": {
+            "min": -6313.0,
+            "max": 7188.0,
+            "mean": 240.48818668220585,
+            "stdev": 1770.9068851634015
+          },
+          "AccY": {
+            "min": -3478.0,
+            "max": 3222.0,
+            "mean": -122.46058033585845,
+            "stdev": 1090.6660769458629
+          },
+          "AccZ": {
+            "min": 7647.0,
+            "max": 30921.0,
+            "mean": 16131.18594056259,
+            "stdev": 2029.4033639715733
+          }
+        },
+        "sampleRows": [
+          [
+            "2006308",
+            "-1197",
+            "-843",
+            "12668"
+          ],
+          [
+            "2008060",
+            "-1303",
+            "-749",
+            "17360"
+          ],
+          [
+            "2009824",
+            "-2102",
+            "-234",
+            "16723"
+          ]
+        ]
+      },
+      {
+        "name": "Data/20 - m1_electrically_50_ohm_fault_m2_imbalanced_on_background_half_speed.csv",
+        "recordCount": 111743,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 1531693120.0,
+            "max": 1747736648.0,
+            "mean": 1639723704.2642133,
+            "stdev": 62367300.69266782
+          },
+          "AccX": {
+            "min": -5999.0,
+            "max": 6253.0,
+            "mean": 290.278719919816,
+            "stdev": 1782.1146802494652
+          },
+          "AccY": {
+            "min": -3448.0,
+            "max": 2587.0,
+            "mean": -185.9440859830146,
+            "stdev": 915.8558654925838
+          },
+          "AccZ": {
+            "min": -1.0,
+            "max": 26187.0,
+            "mean": 16200.678467555015,
+            "stdev": 2474.683294423825
+          }
+        },
+        "sampleRows": [
+          [
+            "1531693120",
+            "2269",
+            "951",
+            "14031"
+          ],
+          [
+            "1531695040",
+            "729",
+            "-423",
+            "15388"
+          ],
+          [
+            "1531696960",
+            "770",
+            "-55",
+            "15362"
+          ]
+        ]
+      },
+      {
+        "name": "Data/21 - m1_electrically_50_ohm_fault_load_0.5Nm_m2_mechanically_imbalanced_half_speed.csv",
+        "recordCount": 107380,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 1271797544.0,
+            "max": 1479669948.0,
+            "mean": 1375732121.4975972,
+            "stdev": 60007204.59834837
+          },
+          "AccX": {
+            "min": -6720.0,
+            "max": 6753.0,
+            "mean": 287.50656546842987,
+            "stdev": 1780.6274993902455
+          },
+          "AccY": {
+            "min": -3388.0,
+            "max": 3301.0,
+            "mean": -187.4898584466381,
+            "stdev": 1085.864578150477
+          },
+          "AccZ": {
+            "min": -1.0,
+            "max": 26435.0,
+            "mean": 16212.338964425406,
+            "stdev": 2391.903850424135
+          }
+        },
+        "sampleRows": [
+          [
+            "1271797544",
+            "-1299",
+            "-1453",
+            "14748"
+          ],
+          [
+            "1271799488",
+            "-52",
+            "-1690",
+            "15164"
+          ],
+          [
+            "1271801412",
+            "3917",
+            "-71",
+            "16863"
+          ]
+        ]
+      },
+      {
+        "name": "Data/22 - m1_electrically_100_ohm_fault_m2_mechanically_imbalanced_half_speed.csv",
+        "recordCount": 104434,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 1988.0,
+            "max": 198049316.0,
+            "mean": 99330857.4419442,
+            "stdev": 56732645.80197351
+          },
+          "AccX": {
+            "min": -5853.0,
+            "max": 6959.0,
+            "mean": 299.7141256678859,
+            "stdev": 1767.912004761945
+          },
+          "AccY": {
+            "min": -4736.0,
+            "max": 17667.0,
+            "mean": -186.2748817434935,
+            "stdev": 1194.3384635892005
+          },
+          "AccZ": {
+            "min": 6747.0,
+            "max": 25651.0,
+            "mean": 16211.026370974692,
+            "stdev": 2326.963141542835
+          }
+        },
+        "sampleRows": [
+          [
+            "1988",
+            "-1524",
+            "17667"
+          ],
+          [
+            "1979944",
+            "1919",
+            "-2097",
+            "11430"
+          ],
+          [
+            "1981708",
+            "-837",
+            "-2087",
+            "20912"
+          ]
+        ]
+      },
+      {
+        "name": "Data/23 - m1_electrically_100_ohm_fault_load_0.5Nm_m2_mechanically_imbalanced_half_speed.csv",
+        "recordCount": 108170,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 2924047784.0,
+            "max": 3133817640.0,
+            "mean": 3028929026.078247,
+            "stdev": 60555025.907678984
+          },
+          "AccX": {
+            "min": -7014.0,
+            "max": 6780.0,
+            "mean": 308.8059073680318,
+            "stdev": 1799.6769240019466
+          },
+          "AccY": {
+            "min": -4217.0,
+            "max": 3902.0,
+            "mean": -184.1424609411112,
+            "stdev": 1382.6020568939703
+          },
+          "AccZ": {
+            "min": -1.0,
+            "max": 27791.0,
+            "mean": 16202.576389017288,
+            "stdev": 2506.8990196485333
+          }
+        },
+        "sampleRows": [
+          [
+            "2924047784",
+            "-348",
+            "1570",
+            "20756"
+          ],
+          [
+            "2924049720",
+            "540",
+            "1276",
+            "15091"
+          ],
+          [
+            "2924051660",
+            "2056",
+            "866",
+            "15696"
+          ]
+        ]
+      },
+      {
+        "name": "Data/24 - m1_electrically_150_ohm_fault_m2_imbalanced_on_background_half_speed.csv",
+        "recordCount": 102918,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 241739676.0,
+            "max": 437335352.0,
+            "mean": 339536779.8531647,
+            "stdev": 56464825.77080393
+          },
+          "AccX": {
+            "min": -6215.0,
+            "max": 6312.0,
+            "mean": 301.8333139003867,
+            "stdev": 1784.2240225523226
+          },
+          "AccY": {
+            "min": -5335.0,
+            "max": 3993.0,
+            "mean": -185.38799821216892,
+            "stdev": 1372.8479249862303
+          },
+          "AccZ": {
+            "min": -1.0,
+            "max": 25462.0,
+            "mean": 16209.958112283566,
+            "stdev": 2354.86529714933
+          }
+        },
+        "sampleRows": [
+          [
+            "241739676",
+            "-464",
+            "-644",
+            "13115"
+          ],
+          [
+            "241741580",
+            "1599",
+            "-149",
+            "15455"
+          ],
+          [
+            "241743480",
+            "1419",
+            "857",
+            "13823"
+          ]
+        ]
+      },
+      {
+        "name": "Data/25 - m1_mechanically_imbalanced_electrically_50_ohm_fault_m2_imbalanced_on_background_half_speed.csv",
+        "recordCount": 102953,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 1881372344.0,
+            "max": 2081000532.0,
+            "mean": 1981188496.0371044,
+            "stdev": 57630174.71136577
+          },
+          "AccX": {
+            "min": -6275.0,
+            "max": 8120.0,
+            "mean": 313.3268773129486,
+            "stdev": 1927.8602634390725
+          },
+          "AccY": {
+            "min": -5413.0,
+            "max": 4536.0,
+            "mean": -162.28404223286353,
+            "stdev": 1447.437344115436
+          },
+          "AccZ": {
+            "min": 0.0,
+            "max": 25304.0,
+            "mean": 16171.224422794867,
+            "stdev": 2335.9861259171917
+          }
+        },
+        "sampleRows": [
+          [
+            "1881372344",
+            "-222",
+            "1489",
+            "14967"
+          ],
+          [
+            "1881374276",
+            "410",
+            "2954",
+            "18160"
+          ],
+          [
+            "1881376216",
+            "-464",
+            "2248",
+            "16227"
+          ]
+        ]
+      },
+      {
+        "name": "Data/26 - m1_mechanically_umbalanced_electrically_50_ohm_fault_load_0.5Nm_m2_umbalanced_on_background_half_speed.csv",
+        "recordCount": 146328,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 759915256.0,
+            "max": 1039253456.0,
+            "mean": 899299083.0349898,
+            "stdev": 80518718.83976662
+          },
+          "AccX": {
+            "min": -7363.0,
+            "max": 7213.0,
+            "mean": 236.7088253786015,
+            "stdev": 2001.6353433159813
+          },
+          "AccY": {
+            "min": -6144.0,
+            "max": 4230.0,
+            "mean": -169.26620332403914,
+            "stdev": 1767.7552701397215
+          },
+          "AccZ": {
+            "min": 6044.0,
+            "max": 27052.0,
+            "mean": 16191.515417418403,
+            "stdev": 2354.867305563336
+          }
+        },
+        "sampleRows": [
+          [
+            "759915256",
+            "3290",
+            "1002",
+            "16548"
+          ],
+          [
+            "759917164",
+            "2903",
+            "2419",
+            "14387"
+          ],
+          [
+            "759919076",
+            "1764",
+            "2673",
+            "19444"
+          ]
+        ]
+      },
+      {
+        "name": "Data/27 - m1_mechanically_imbalanced_electrically_100_ohm_fault_m2_imbalanced_on_background_half_speed.csv",
+        "recordCount": 110081,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 1499121376.0,
+            "max": 1712525848.0,
+            "mean": 1605831195.9176242,
+            "stdev": 61605842.93371994
+          },
+          "AccX": {
+            "min": -7030.0,
+            "max": 8066.0,
+            "mean": 244.7161181311943,
+            "stdev": 2043.6118650939927
+          },
+          "AccY": {
+            "min": -5348.0,
+            "max": 5177.0,
+            "mean": -174.0738819596479,
+            "stdev": 1771.6212350230019
+          },
+          "AccZ": {
+            "min": 6321.0,
+            "max": 26280.0,
+            "mean": 16211.393128696142,
+            "stdev": 2506.9782003503433
+          }
+        },
+        "sampleRows": [
+          [
+            "1499121376",
+            "-1509",
+            "-2803",
+            "16357"
+          ],
+          [
+            "1499123312",
+            "-2156",
+            "-3100",
+            "18556"
+          ],
+          [
+            "1499125256",
+            "-2742",
+            "-1458",
+            "17463"
+          ]
+        ]
+      },
+      {
+        "name": "Data/28 - m1_mechanically_imbalanced_electrically_100_ohm_fault_load_0.5Nm_m2_imbalanced_on_background_half_speed.csv",
+        "recordCount": 136361,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 1209745704.0,
+            "max": 1474122460.0,
+            "mean": 1341938166.6981323,
+            "stdev": 76317086.30235426
+          },
+          "AccX": {
+            "min": -8125.0,
+            "max": 8473.0,
+            "mean": 238.04067878645654,
+            "stdev": 2144.505807029122
+          },
+          "AccY": {
+            "min": -7267.0,
+            "max": 5197.0,
+            "mean": -174.55803345531348,
+            "stdev": 2342.9116525981613
+          },
+          "AccZ": {
+            "min": 6568.0,
+            "max": 26276.0,
+            "mean": 16202.357895585981,
+            "stdev": 2422.278589644091
+          }
+        },
+        "sampleRows": [
+          [
+            "1209745704",
+            "-2557",
+            "237",
+            "14485"
+          ],
+          [
+            "1209747664",
+            "-3504",
+            "-2778",
+            "16271"
+          ],
+          [
+            "1209749604",
+            "-4987",
+            "-2974",
+            "19792"
+          ]
+        ]
+      },
+      {
+        "name": "Data/29 - m1_mechanically_imbalanced_electrically_150_ohm_fault_m2_imbalanced_on_background_half_speed.csv",
+        "recordCount": 102432,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 2571840324.0,
+            "max": 2770495780.0,
+            "mean": 2671170198.2426977,
+            "stdev": 57346612.139956184
+          },
+          "AccX": {
+            "min": -7136.0,
+            "max": 8378.0,
+            "mean": 241.12733325523274,
+            "stdev": 2164.281560985206
+          },
+          "AccY": {
+            "min": -5755.0,
+            "max": 6503.0,
+            "mean": -176.5380545142143,
+            "stdev": 2083.5225282157303
+          },
+          "AccZ": {
+            "min": 5536.0,
+            "max": 26128.0,
+            "mean": 16212.259391596375,
+            "stdev": 2535.734387744858
+          }
+        },
+        "sampleRows": [
+          [
+            "2571840324",
+            "-3196",
+            "-3768",
+            "19143"
+          ],
+          [
+            "2571842248",
+            "-992",
+            "-2866",
+            "16013"
+          ],
+          [
+            "2571844204",
+            "-3402",
+            "-1600",
+            "17255"
+          ]
+        ]
+      },
+      {
+        "name": "Data/30 - m1_mechanically_imbalanced_electrically_150_ohm_fault_m2_imbalanced_on_background_rotated_half_speed.csv",
+        "recordCount": 101405,
+        "columns": [
+          "Timestamp",
+          "AccX",
+          "AccY",
+          "AccZ"
+        ],
+        "missing": {},
+        "numericSummary": {
+          "Timestamp": {
+            "min": 2872220040.0,
+            "max": 3068875964.0,
+            "mean": 2970541637.1480303,
+            "stdev": 56770928.490405805
+          },
+          "AccX": {
+            "min": -7108.0,
+            "max": 7785.0,
+            "mean": 236.47829988659336,
+            "stdev": 2159.8974604795467
+          },
+          "AccY": {
+            "min": -5589.0,
+            "max": 5740.0,
+            "mean": -175.89814111730192,
+            "stdev": 2062.7165715585156
+          },
+          "AccZ": {
+            "min": 5266.0,
+            "max": 25812.0,
+            "mean": 16210.815413441152,
+            "stdev": 2496.650325752391
+          }
+        },
+        "sampleRows": [
+          [
+            "2872220040",
+            "2453",
+            "3572",
+            "18732"
+          ],
+          [
+            "2872221984",
+            "3512",
+            "2780",
+            "18031"
+          ],
+          [
+            "2872223928",
+            "-1683",
+            "-423",
+            "21636"
+          ]
+        ]
+      }
+    ]
+  }
+}
