@@ -1,0 +1,482 @@
+Electric Motor Vibrations Dataset
+This dataset contains samples provided by vibrations sensor that can be used in designing and testing machine learning algorithms for general classification
+problems or more specific one such as predictive maintenance.
+
+Dataset is organized as follows:
+
+No.
+
+File name
+
+Category
+
+Description
+
+1
+
+01 - m1_half_shaft_speed_no_mechanical_load
+
+Normal operation
+
+M1 test asynchronous motor running without
+mechanical load set at half of maximum shaft
+revolution speed
+M1 test asynchronous motor running with
+mechanical load at torque value of 0.5 Nm and set
+at half of maximum shaft revolution speed
+M1 test asynchronous motor running without
+mechanical load and set at half of maximum shaft
+revolution speed in presence of mechanical
+imbalance at shaft
+M1 test asynchronous motor running without
+mechanical load and set at half of maximum shaft
+revolution speed in presence of mechanical
+imbalance at shaft
+M1 test asynchronous motor running with
+mechanical load at torque value of 0.5 Nm and set
+at half of maximum shaft revolution speed in
+presence of mechanical imbalance at shaft
+M1 test asynchronous motor running without
+mechanical load and set at half of maximum shaft
+revolution speed in presence of fault simulated
+with a 50 Ohm resistor
+M1 test asynchronous motor running without
+mechanical load and set at half of maximum shaft
+revolution speed in presence of fault simulated
+with a 100 Ohm resistor
+M1 test asynchronous motor running without
+mechanical load and set at half of maximum shaft
+revolution speed in presence of fault simulated
+with a 150 Ohm resistor
+M1 test asynchronous motor running with
+mechanical load at torque value of 0.5 Nm and set
+at half of maximum shaft revolution speed in
+presence of fault simulated with a 50 Ohm resistor
+M1 test asynchronous motor running with
+mechanical load at torque value of 0.5 Nm and set
+at half of maximum shaft revolution speed in
+presence of fault simulated with a 100 Ohm
+resistor
+M1 test asynchronous motor running without
+mechanical simulation load not power supplied,
+shaft misalignment and set at half of maximum
+shaft revolution speed in presence of fault
+simulated with a 50 Ohm resistor
+M1 test asynchronous motor running without
+mechanical simulation load not power supplied,
+shaft misalignment and set at half of maximum
+shaft revolution speed in presence of fault
+simulated with a 100 Ohm resistor
+M1 test asynchronous motor running without
+mechanical simulation load not power supplied,
+shaft misalignment and set at half of maximum
+shaft revolution speed in presence of fault
+simulated with a 150 Ohm resistor
+M1 test asynchronous motor running with
+mechanical load at torque value of 0.5 Nm, shaft
+misalignment and set at half of maximum shaft
+revolution speed in presence of fault simulated
+with a 50 Ohm resistor
+M1 test asynchronous motor running without
+mechanical load set at half of maximum shaft
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+8
+
+9
+
+10
+
+11
+
+12
+
+13
+
+14
+
+15
+
+02 - m1_load_0.5Nm_half_speed
+
+03 - m1_mechanically_umbalanced_half_speed
+
+04 - m1_mechanically_umbalanced_half_speed
+
+05 - m1_mechanically_umbalanced_load_0.5Nm_half_speed
+
+06 - m1_electrically_50_ohm_fault_half_speed
+
+07 - m1_electrically_100_ohm_fault_half_speed
+
+08 - m1_electrically_150_ohm_fault_half_speed
+
+09 - m1_electrically_50_ohm_fault_load_0.5Nm_half_speed
+
+10 - m1_electrically_100_ohm_fault_load_0.5Nm_half_speed
+
+Normal operation with
+load
+Mechanical fault
+(shaft misalignment)
+
+Mechanical fault
+(shaft misalignment)
+
+Mechanical fault
+(shaft misalignment)
+with load
+Electrical fault
+
+Electrical fault
+
+Electrical fault
+
+Electrical fault with load
+
+Electrical fault with load
+
+11 m1_mechanically_imbalanced_electrically_50_ohm_fault_half_
+speed
+
+Mechanical fault
+(shaft misalignment)
+and
+Electrical fault
+
+12 m1_mechanically_imbalanced_electrically_100_ohm_fault_half
+_speed
+
+Mechanical fault
+(shaft misalignment)
+and
+Electrical fault
+
+13 m1_mechanically_imbalanced_electrically_150_ohm_fault_half
+_speed
+
+Mechanical fault
+(shaft misalignment)
+and
+Electrical fault
+
+14 m1_mechanically_imbalanced_electrically_50_ohm_fault_load
+_0.5Nm_half_speed
+
+Mechanical fault
+(shaft misalignment)
+and
+Electrical fault
+
+15 m1_with_m2_mechanicaly_imbalanced_on_background_half_s
+peed
+
+Normal operation
+High noise present
+
+Data length
+[data samples]
+107336
+
+102909
+
+100514
+
+142799
+
+151093
+
+104293
+
+101854
+
+107174
+
+102782
+
+103376
+
+150375
+
+105232
+
+101613
+
+150463
+
+102111
+
+16
+
+17
+
+18
+
+19
+
+20
+
+21
+
+22
+
+23
+
+24
+
+25
+
+26
+
+27
+
+28
+
+29
+
+16 m1_mechanically_imbalanced_with_m2_normal_on_backgrou
+nd_half_speed
+
+Mechanical fault
+(shaft misalignment)
+and
+Noise present
+
+17 m1_mechanically_imbalanced_with_m2_mechanicaly_imbalan
+ced_on_background_half_speed
+
+Mechanical fault
+(shaft misalignment)
+and
+High noise present
+
+18 m1_load_0.5Nm_m2_mechanically_imbalanced_on_backgroun
+d_half_speed
+
+Normal operation with
+load and
+High noise present
+
+19 m1_mechanically_imbalanced_load_0.5Nm_m2_mechanically_
+imbalanced_on_background_half_speed.
+
+Mechanical fault
+(shaft misalignment)
+with load
+and
+High noise present
+Electrical fault and High
+noise present
+
+20 m1_electrically_50_ohm_fault_m2_imbalanced_on_backgroun
+d_half_speed
+
+21 m1_electrically_50_ohm_fault_load_0.5Nm_m2_mechanically_
+imbalanced_half_speed
+
+Electrical fault with load
+and High noise present
+
+22 m1_electrically_100_ohm_fault_m2_mechanically_imbalanced
+_half_speed
+
+Electrical fault and High
+noise present
+
+23 m1_electrically_100_ohm_fault_load_0.5Nm_m2_mechanically
+_imbalanced_half_speed
+
+Electrical fault with load
+and High noise present
+
+24 m1_electrically_150_ohm_fault_m2_imbalanced_on_backgrou
+nd_half_speed
+
+Electrical fault and High
+noise present
+
+25 m1_mechanically_imbalanced_electrically_50_ohm_fault_m2_i
+mbalanced_on_background_half_speed
+
+Mechanical fault
+(shaft misalignment),
+Electrical fault
+and High noise present
+
+26 m1_mechanically_umbalanced_electrically_50_ohm_fault_load
+_0.5Nm_m2_umbalanced_on_background_half_speed
+
+Mechanical fault
+(shaft misalignment),
+with load,
+Electrical fault
+and High noise present
+
+27 m1_mechanically_imbalanced_electrically_100_ohm_fault_m2
+_imbalanced_on_background_half_speed
+
+Mechanical fault
+(shaft misalignment),
+Electrical fault
+and High noise present
+
+28 m1_mechanically_imbalanced_electrically_100_ohm_fault_loa
+d_0.5Nm_m2_imbalanced_on_background_half_speed
+
+Mechanical fault
+(shaft misalignment),
+with load,
+Electrical fault
+and High noise present
+
+29 m1_mechanically_imbalanced_electrically_150_ohm_fault_m2
+_imbalanced_on_background_half_speed
+
+Mechanical fault
+(shaft misalignment),
+Electrical fault
+and High noise present
+
+revolution speed, second motor running with
+vibrations placed in proximity
+M1 test asynchronous motor running with
+mechanical simulation load not power supplied,
+shaft misalignment, set at half of maximum shaft
+revolution speed, second motor running placed in
+proximity
+M1 test asynchronous motor running with
+mechanical simulation load not power supplied,
+shaft misalignment, set at half of maximum shaft
+revolution speed, second motor running with
+vibrations placed in proximity
+M1 test asynchronous motor running with
+mechanical load at torque value of 0.5 Nm, set at
+half of maximum shaft revolution speed, second
+motor running with vibrations placed in proximity
+M1 test asynchronous motor running with
+mechanical load at torque value of 0.5 Nm, shaft
+misalignment, set at half of maximum shaft
+revolution speed, second motor running with
+vibrations placed in proximity
+M1 test asynchronous motor running without load
+and set at half of maximum shaft revolution speed
+in presence of fault simulated with a 50 Ohm
+resistor, second motor running with vibrations
+placed in proximity
+M1 test asynchronous motor running with
+mechanical load at torque value of 0.5 Nm, and set
+at half of maximum shaft revolution speed in
+presence of fault simulated with a 50 Ohm resistor,
+second motor running with vibrations placed in
+proximity
+M1 test asynchronous motor running without load
+and set at half of maximum shaft revolution speed
+in presence of fault simulated with a 100 Ohm
+resistor, second motor running with vibrations
+placed in proximity
+M1 test asynchronous motor running with
+mechanical load at torque value of 0.5 Nm, and set
+at half of maximum shaft revolution speed in
+presence of fault simulated with a 100 Ohm
+resistor, second motor running with vibrations
+placed in proximity
+M1 test asynchronous motor running without load
+and set at half of maximum shaft revolution speed
+in presence of fault simulated with a 150 Ohm
+resistor, second motor running with vibrations
+placed in proximity
+M1 test asynchronous motor running with
+mechanical simulation load not power supplied,
+shaft misalignment, speed in presence of electrical
+fault simulated with a 50 Ohm resistor, set at half
+of maximum shaft revolution speed, second motor
+running with vibrations placed in proximity
+M1 test asynchronous motor running with
+mechanical simulation load at 0.5 Nm, shaft
+misalignment, speed in presence of electrical fault
+simulated with a 50 Ohm resistor, set at half of
+maximum shaft revolution speed, second motor
+running with vibrations placed in proximity
+M1 test asynchronous motor running with
+mechanical simulation load not power supplied,
+shaft misalignment, speed in presence of electrical
+fault simulated with a 100 Ohm resistor, set at half
+of maximum shaft revolution speed, second motor
+running with vibrations placed in proximity
+M1 test asynchronous motor running with
+mechanical simulation load at 0.5 Nm, shaft
+misalignment, speed in presence of electrical fault
+simulated with a 100 Ohm resistor, set at half of
+maximum shaft revolution speed, second motor
+running with vibrations placed in proximity
+M1 test asynchronous motor running with
+mechanical simulation load not power supplied,
+shaft misalignment, speed in presence of electrical
+fault simulated with a 150 Ohm resistor, set at half
+
+153466
+
+155047
+
+104468
+
+151017
+
+111743
+
+107380
+
+104434
+
+108170
+
+102918
+
+102953
+
+146328
+
+110081
+
+136361
+
+102432
+
+30
+
+30 m1_mechanically_imbalanced_electrically_150_ohm_fault_m2
+_imbalanced_on_background_rotated_half_speed
+
+Mechanical fault
+(shaft misalignment),
+Electrical fault
+and High noise present
+
+of maximum shaft revolution speed, second motor
+running with vibrations placed in proximity
+M1 test asynchronous motor running with
+mechanical simulation load not power supplied,
+shaft misalignment, speed in presence of electrical
+fault simulated with a 100 Ohm resistor, set at half
+of maximum shaft revolution speed, second motor
+running with vibrations at half speed placed in
+proximity
+
+Note:
+m1 is the tested motor
+m2 is a second motor for obtaining a more complex testing environment (eg. supplemental noise source).
+
+101405
+
+

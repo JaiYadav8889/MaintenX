@@ -4,39 +4,46 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
+import { MaintenxLayout } from "./components/MaintenxLayout";
+
+// Import MaintenX feature pages
+import DashboardOverview from "./pages/DashboardOverview";
+import FleetMonitoring from "./pages/FleetMonitoring";
+import MachineDetail from "./pages/MachineDetail";
+import PredictiveInsights from "./pages/PredictiveInsights";
+import AlertCenter from "./pages/AlertCenter";
+import MaintenanceWorkspace from "./pages/MaintenanceWorkspace";
+import DataCenter from "./pages/DataCenter";
+import SimulationDemo from "./pages/SimulationDemo";
 
 function Router() {
-  // make sure to consider if you need authentication for certain routes
   return (
-    <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
-      <Route component={NotFound} />
-    </Switch>
+    <MaintenxLayout>
+      <Switch>
+        <Route path="/" component={DashboardOverview} />
+        <Route path="/fleet" component={FleetMonitoring} />
+        <Route path="/machine/:id" component={MachineDetail} />
+        <Route path="/insights" component={PredictiveInsights} />
+        <Route path="/alerts" component={AlertCenter} />
+        <Route path="/maintenance" component={MaintenanceWorkspace} />
+        <Route path="/datasets" component={DataCenter} />
+        <Route path="/simulation" component={SimulationDemo} />
+        <Route path="/404" component={NotFound} />
+        <Route component={NotFound} />
+      </Switch>
+    </MaintenxLayout>
   );
 }
 
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
-
-function App() {
+export default function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
+      <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
-          <Toaster />
+          <Toaster position="top-right" />
           <Router />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );
 }
-
-export default App;
