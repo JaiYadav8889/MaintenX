@@ -80,6 +80,8 @@ export default function DashboardOverview() {
               </span>
               <span className="text-slate-500 text-xs font-mono">•</span>
               <span className="text-slate-400 text-xs font-mono">Sense → Detect → Understand → Predict → Act</span>
+              <span className="text-slate-500 text-xs font-mono hidden md:inline">•</span>
+              <span className="text-emerald-400 text-xs font-mono hidden md:inline">Last telemetry sync: live</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
               Industrial Predictive Maintenance Intelligence
@@ -148,17 +150,21 @@ export default function DashboardOverview() {
           </CardContent>
         </Card>
 
-        {/* Machines Requiring Attention */}
-        <Card className={`border-slate-800 ${
-          (summary?.attentionRequired || 0) > 0 ? "bg-amber-500/5 border-amber-500/30" : "bg-slate-900/90"
+        {/* Machines Requiring Attention with heightened contrast */}
+        <Card className={`border-slate-800 transition-all ${
+          (summary?.criticalMachines || 0) > 0 
+            ? "bg-red-500/10 border-red-500/40 shadow-sm shadow-red-950/30" 
+            : (summary?.attentionRequired || 0) > 0 
+            ? "bg-amber-500/10 border-amber-500/40 shadow-sm shadow-amber-950/20" 
+            : "bg-slate-900/90"
         }`}>
           <CardContent className="p-4 space-y-2">
             <div className="flex items-center justify-between text-slate-400">
               <span className="text-xs font-medium uppercase tracking-wider font-mono">Requires Attention</span>
-              <AlertTriangle className="w-4 h-4 text-amber-400" />
+              <AlertTriangle className={`w-4 h-4 ${(summary?.criticalMachines || 0) > 0 ? "text-red-400" : "text-amber-400"}`} />
             </div>
             <div className="flex items-baseline space-x-2">
-              <span className="text-2xl sm:text-3xl font-bold font-mono text-amber-400">
+              <span className={`text-2xl sm:text-3xl font-bold font-mono ${(summary?.criticalMachines || 0) > 0 ? "text-red-400" : "text-amber-400"}`}>
                 {summaryQuery.isLoading ? "..." : summary?.attentionRequired || 0}
               </span>
               <span className="text-xs text-slate-400 font-mono">Flagged Machines</span>

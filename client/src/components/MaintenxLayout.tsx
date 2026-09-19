@@ -89,8 +89,8 @@ export function MaintenxLayout({ children }: LayoutProps) {
                     <span className="text-lg font-bold tracking-tight text-white group-hover:text-amber-400 transition-colors">
                       Mainten<span className="text-amber-400 font-extrabold">X</span>
                     </span>
-                    <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
-                      v1.2-PREVIEW
+                    <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-slate-800/90 text-amber-300 border border-amber-500/30">
+                      v1.3-STABLE
                     </span>
                   </div>
                   <p className="text-[11px] text-slate-400 font-medium hidden sm:block tracking-wide">
@@ -180,9 +180,9 @@ export function MaintenxLayout({ children }: LayoutProps) {
           </div>
         </nav>
 
-        {/* Mobile dropdown menu */}
+        {/* Mobile dropdown menu with full module access and scroll safety */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-slate-900 border-b border-slate-800 px-4 pt-2 pb-4 space-y-1">
+          <div className="lg:hidden bg-slate-900/98 border-b border-slate-800 px-4 pt-2 pb-4 space-y-1 max-h-[calc(100vh-4rem)] overflow-y-auto">
             <div className="text-[11px] font-mono text-slate-400 px-2 py-1">
               Presented by: <span className="text-amber-300 font-semibold">Jai Yadav</span> • {currentTime}
             </div>
