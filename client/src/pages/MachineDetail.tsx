@@ -1,537 +1,105 @@
 import React, { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { useRoute, Link } from "wouter";
-import { 
-  ArrowLeft, 
-  Activity, 
-  AlertTriangle, 
-  ShieldAlert, 
-  Wrench, 
-  Clock, 
-  Cpu, 
-  Layers, 
-  Sliders, 
-  CheckCircle2, 
-  Thermometer, 
-  Zap, 
-  RotateCw, 
-  FileCheck2,
-  TrendingUp,
-  Sparkles
-} from "lucide-react";
+import { ArrowLeft, Activity, AlertTriangle, ShieldAlert, Wrench, Clock, Cpu, CheckCircle2, Thermometer, Zap, RotateCw, TrendingUp, Gauge, Network, TimerReset, GitBranch, Info } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RiskPill, StatusPill } from "@/components/RiskPill";
-import { 
-  ResponsiveContainer, 
-  AreaChart, 
-  Area, 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  Tooltip, 
-  CartesianGrid 
-} from "recharts";
+import { ResponsiveContainer, AreaChart, Area, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar, Cell } from "recharts";
 import { toast } from "sonner";
+
+type ScenarioMode = "maintenance" | "no-maintenance";
 
 export default function MachineDetail() {
   const [, params] = useRoute("/machine/:id");
   const machineId = params?.id || "MTR-101";
-
-  const machineQuery = trpc.fleet.getById.useQuery({ id: machineId }, {
-    refetchInterval: 5000
-  });
-
+  const machineQuery = trpc.fleet.getById.useQuery({ id: machineId }, { refetchInterval: 5000 });
   const [activeTab, setActiveTab] = useState<"vibration" | "thermal" | "mechanical">("vibration");
-  const [isSimulating, setIsSimulating] = useState(false);
+  const [scenarioMode, setScenarioMode] = useState<ScenarioMode>("no-maintenance");
 
   const triggerSimMutation = trpc.simulation.triggerStep.useMutation({
     onSuccess: (data) => {
       toast.success(`Simulated ${data.stage} state on ${machineId}`);
       machineQuery.refetch();
-    }
+    },
   });
+  const scenarioQuery = trpc.simulation.whatIf.useQuery({ machineId, scenario: scenarioMode }, { enabled: Boolean(machineId) });
 
   if (machineQuery.isLoading) {
-    return (
-      <div className="py-24 text-center space-y-3">
-        <Activity className="w-8 h-8 text-amber-400 animate-spin mx-auto" />
-        <p className="text-sm text-slate-400 font-mono">Loading telemetry stream for {machineId}...</p>
-      </div>
-    );
+    return <div className="py-24 text-center space-y-3"><Activity className="w-8 h-8 text-amber-400 animate-spin mx-auto" /><p className="text-sm text-slate-400 font-mono">Loading telemetry stream for {machineId}...</p></div>;
   }
-
   if (!machineQuery.data?.machine) {
-    return (
-      <div className="py-20 text-center space-y-4">
-        <AlertTriangle className="w-10 h-10 text-amber-500 mx-auto" />
-        <h2 className="text-lg font-bold text-white">Machine Not Found</h2>
-        <p className="text-sm text-slate-400">Asset identifier {machineId} was not located in fleet inventory.</p>
-        <Link href="/fleet">
-          <Button variant="outline" className="border-slate-700 text-slate-200">Return to Fleet</Button>
-        </Link>
-      </div>
-    );
+    return <div className="py-20 text-center space-y-4"><AlertTriangle className="w-10 h-10 text-amber-500 mx-auto" /><h2 className="text-lg font-bold text-white">Machine Not Found</h2><p className="text-sm text-slate-400">Asset identifier {machineId} was not located in fleet inventory.</p><Link href="/fleet"><Button variant="outline" className="border-slate-700 text-slate-200">Return to Fleet</Button></Link></div>;
   }
 
   const { machine, alerts, workOrders } = machineQuery.data;
   const t = machine.currentTelemetry;
   const r = machine.riskAssessment;
-
-  // Format historical trend data for recharts
-  const chartData = machine.telemetryHistory.map(pt => ({
-    time: new Date(pt.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    vibration: pt.vibrationRmsMmS,
-    tempDiff: pt.tempDiffC,
-    processTemp: pt.processTempC,
-    torque: pt.torqueNm,
-    speed: pt.rotationalSpeedRpm,
-    wear: pt.toolWearMin
+  const twin = machine.digitalTwin;
+  const chartData = machine.telemetryHistory.map((point) => ({
+    time: new Date(point.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    vibration: point.vibrationRmsMmS,
+    tempDiff: point.tempDiffC,
+    torque: point.torqueNm,
+    wear: point.toolWearMin,
   }));
 
   const handleSimulate = (stage: "healthy" | "warning" | "high_risk" | "critical") => {
-    setIsSimulating(true);
     triggerSimMutation.mutate({ machineId: machine.id, stage });
-    setTimeout(() => setIsSimulating(false), 600);
   };
 
   return (
     <div className="space-y-6">
-      
-      {/* Back breadcrumb and quick title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <Link href="/fleet" className="inline-flex items-center text-xs text-slate-400 hover:text-amber-400 transition-colors mb-1 font-mono">
-            <ArrowLeft className="w-3.5 h-3.5 mr-1" />
-            Back to Fleet Monitoring
-          </Link>
-          <div className="flex items-center space-x-3">
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
-              {machine.name}
-            </h1>
-            <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-slate-800 text-amber-400 border border-slate-700">
-              {machine.id}
-            </span>
-            <StatusPill status={machine.status} />
-          </div>
-          <p className="text-xs text-slate-400 font-mono">
-            Serial: {machine.serialNumber} • Type: {machine.type} • Bay: {machine.area}
-          </p>
+          <Link href="/fleet" className="inline-flex items-center text-xs text-slate-400 hover:text-amber-400 transition-colors mb-1 font-mono"><ArrowLeft className="w-3.5 h-3.5 mr-1" />Back to Fleet Monitoring</Link>
+          <div className="flex flex-wrap items-center gap-2.5"><h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white">{machine.name}</h1><span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-slate-800 text-amber-400 border border-slate-700">{machine.id}</span><StatusPill status={machine.status} /></div>
+          <p className="text-xs text-slate-400 font-mono">Serial: {machine.serialNumber} • Type: {machine.type} • Bay: {machine.area} • Data: <span className="text-amber-300">{machine.dataSource}</span></p>
         </div>
-
-        {/* Live Simulation Controls for Evaluators */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1.5 bg-slate-900 border border-slate-800 rounded-lg">
-          <span className="text-[10px] font-mono text-slate-400 px-2 font-bold uppercase tracking-wider">
-            Simulate Stage:
-          </span>
-          <Button 
-            size="sm" 
-            variant="ghost" 
-            onClick={() => handleSimulate("healthy")}
-            className="h-7 text-xs text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300"
-          >
-            Normal
-          </Button>
-          <Button 
-            size="sm" 
-            variant="ghost" 
-            onClick={() => handleSimulate("warning")}
-            className="h-7 text-xs text-yellow-400 hover:bg-yellow-500/10 hover:text-yellow-300"
-          >
-            Warning
-          </Button>
-          <Button 
-            size="sm" 
-            variant="ghost" 
-            onClick={() => handleSimulate("high_risk")}
-            className="h-7 text-xs text-amber-400 hover:bg-amber-500/10 hover:text-amber-300"
-          >
-            High Risk
-          </Button>
-          <Button 
-            size="sm" 
-            variant="ghost" 
-            onClick={() => handleSimulate("critical")}
-            className="h-7 text-xs text-red-400 hover:bg-red-500/10 hover:text-red-300"
-          >
-            Critical
-          </Button>
-        </div>
+        <div className="flex flex-wrap items-center gap-1.5 p-1.5 bg-slate-900 border border-slate-800 rounded-lg"><span className="text-[10px] font-mono text-slate-400 px-2 font-bold uppercase tracking-wider">Replay stage:</span><Button size="sm" variant="ghost" onClick={() => handleSimulate("healthy")} className="h-7 text-xs text-emerald-400 hover:bg-emerald-500/10">Normal</Button><Button size="sm" variant="ghost" onClick={() => handleSimulate("warning")} className="h-7 text-xs text-yellow-400 hover:bg-yellow-500/10">Warning</Button><Button size="sm" variant="ghost" onClick={() => handleSimulate("high_risk")} className="h-7 text-xs text-amber-400 hover:bg-amber-500/10">High Risk</Button><Button size="sm" variant="ghost" onClick={() => handleSimulate("critical")} className="h-7 text-xs text-red-400 hover:bg-red-500/10">Critical</Button></div>
       </div>
 
-      {/* Top Machine Status & Explainability Strip */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        {/* Left Card: Failure Risk & Health Score */}
         <Card className="bg-slate-900/90 border-slate-800">
-          <CardHeader className="p-4 border-b border-slate-800 flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="text-sm font-bold text-white uppercase tracking-wider font-mono">
-                Condition Assessment
-              </CardTitle>
-              <CardDescription className="text-xs text-slate-400">
-                Transparent multi-sensor scoring
-              </CardDescription>
-            </div>
-            <RiskPill category={r.riskCategory} pct={r.estimatedRiskPct} />
-          </CardHeader>
-
+          <CardHeader className="p-4 border-b border-slate-800 flex flex-row items-center justify-between"><div><CardTitle className="text-sm font-bold text-white uppercase tracking-wider font-mono">Machine Health Score</CardTitle><CardDescription className="text-xs text-slate-400">Weighted condition index</CardDescription></div><RiskPill category={r.riskCategory} pct={r.estimatedRiskPct} /></CardHeader>
           <CardContent className="p-4 space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-2xl font-bold font-mono text-white">
-                  {r.estimatedRiskPct}%
-                </div>
-                <div className="text-[11px] text-slate-400 uppercase font-mono">Estimated Failure Risk</div>
-              </div>
-
-              <div className="text-right">
-                <div className={`text-2xl font-bold font-mono ${
-                  r.healthScorePct < 50 ? "text-red-400" :
-                  r.healthScorePct < 75 ? "text-amber-400" : "text-emerald-400"
-                }`}>
-                  {r.healthScorePct}%
-                </div>
-                <div className="text-[11px] text-slate-400 uppercase font-mono">Asset Health Score</div>
-              </div>
-            </div>
-
-            {/* Health Score Bar */}
-            <div className="w-full bg-slate-950 rounded-full h-2.5 overflow-hidden border border-slate-800">
-              <div 
-                className={`h-full rounded-full transition-all duration-500 ${
-                  r.healthScorePct < 50 ? "bg-red-500" :
-                  r.healthScorePct < 75 ? "bg-amber-400" : "bg-emerald-400"
-                }`}
-                style={{ width: `${r.healthScorePct}%` }}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-2 text-[11px] font-mono text-slate-400 pt-1">
-              <div>Anomaly Score: <strong className="text-slate-200">{r.anomalyScore.toFixed(2)}</strong></div>
-              <div>Confidence: <strong className="text-slate-200">{r.confidencePct}%</strong></div>
-              <div>Urgency: <strong className={r.urgency.includes("Immediate") ? "text-red-400" : "text-slate-200"}>{r.urgency.split(" ")[0]}</strong></div>
-              <div>Data Mode: <strong className="text-amber-400">{machine.dataSource}</strong></div>
-            </div>
+            <div className="flex items-end justify-between"><div><div className="text-4xl font-bold font-mono text-white">{r.healthScorePct}<span className="text-lg text-slate-400">/100</span></div><div className="text-[11px] text-slate-400 uppercase font-mono">Current health</div></div><div className="text-right"><div className="text-2xl font-bold font-mono text-amber-400">{r.estimatedRiskPct}%</div><div className="text-[11px] text-slate-400 uppercase font-mono">Failure risk</div></div></div>
+            <div className="w-full bg-slate-950 rounded-full h-2.5 overflow-hidden border border-slate-800"><div className={`h-full rounded-full transition-all duration-500 ${r.healthScorePct < 50 ? "bg-red-500" : r.healthScorePct < 75 ? "bg-amber-400" : "bg-emerald-400"}`} style={{ width: `${r.healthScorePct}%` }} /></div>
+            <div className="grid grid-cols-2 gap-2 text-[11px] font-mono text-slate-400"><div>Priority: <strong className="text-red-400">{r.maintenancePriority}</strong></div><div>Trend: <strong className="text-amber-300">{r.degradationTrend}</strong></div><div>RUL estimate: <strong className="text-slate-200">{r.rulEstimate.label}</strong></div><div>Confidence: <strong className="text-slate-200">{r.confidencePct}%</strong></div></div>
+            <div className="p-3 rounded bg-slate-950 border border-slate-800 text-xs text-slate-300 leading-relaxed"><span className="font-mono text-amber-400 font-bold">Why it changed: </span>{r.explanation}</div>
           </CardContent>
         </Card>
 
-        {/* Center & Right Card: Explanation & Recommended Maintenance Action */}
-        <Card className="lg:col-span-2 bg-slate-900/90 border-slate-800 flex flex-col justify-between">
-          <CardHeader className="p-4 border-b border-slate-800">
-            <CardTitle className="text-sm font-bold text-white flex items-center justify-between">
-              <span className="flex items-center space-x-2">
-                <Cpu className="w-4 h-4 text-amber-400" />
-                <span>Transparent Multi-Signal Diagnosis</span>
-              </span>
-              <span className="text-xs font-mono font-normal text-slate-400">
-                Inspection Target: <strong className="text-amber-300">{r.recommendedInspectionType}</strong>
-              </span>
-            </CardTitle>
-          </CardHeader>
-
-          <CardContent className="p-4 space-y-3.5">
-            {/* Plain-English Explanation */}
-            <div className="p-3 bg-slate-950/80 rounded border border-slate-800 space-y-1">
-              <div className="text-xs font-bold text-amber-400 uppercase tracking-wide font-mono flex items-center space-x-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Why Was This Machine Flagged?</span>
-              </div>
-              <p className="text-xs text-slate-200 leading-relaxed font-sans">
-                {r.explanation}
-              </p>
-            </div>
-
-            {/* Recommended Action */}
-            <div className="p-3 bg-amber-500/5 rounded border border-amber-500/30 space-y-1">
-              <div className="text-xs font-bold text-amber-300 uppercase tracking-wide font-mono flex items-center space-x-1.5">
-                <Wrench className="w-3.5 h-3.5" />
-                <span>Recommended Maintenance Action</span>
-              </div>
-              <p className="text-xs text-slate-200 font-medium leading-relaxed">
-                {r.recommendedAction}
-              </p>
-            </div>
-
-            {/* Contributing factors tags */}
-            {r.contributingSignals.length > 0 && (
-              <div className="space-y-1.5 pt-1">
-                <span className="text-[11px] font-mono text-slate-400 uppercase font-semibold">
-                  Contributing Physical Deviations:
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {r.contributingSignals.map((sig, i) => (
-                    <div key={i} className="px-2.5 py-1 rounded bg-slate-800/80 border border-slate-700 text-xs">
-                      <span className="font-semibold text-amber-300">{sig.signal}:</span>{" "}
-                      <span className="text-slate-200 font-mono">{sig.observedValue}</span>{" "}
-                      <span className="text-[10px] text-slate-400 font-mono">(Nominal: {sig.nominalRange})</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+        <Card className="lg:col-span-2 bg-slate-900/90 border-slate-800">
+          <CardHeader className="p-4 border-b border-slate-800"><CardTitle className="text-sm font-bold text-white flex items-center justify-between"><span className="flex items-center gap-2"><Network className="w-4 h-4 text-amber-400" />Functional Digital Twin</span><span className="text-[10px] font-mono font-normal px-2 py-0.5 rounded bg-slate-950 border border-slate-800 text-slate-400">{twin.basis === "simulated" ? "Scenario state" : "Observed / derived state"}</span></CardTitle><CardDescription className="text-xs text-slate-400">Current machine → digital representation → predicted health state</CardDescription></CardHeader>
+          <CardContent className="p-4 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs"><div className="p-3 rounded bg-slate-950 border border-slate-800"><div className="text-[10px] font-mono uppercase text-slate-500">Current state</div><div className="font-bold text-white mt-1">{twin.currentState}</div><div className="text-[11px] text-slate-400 mt-1">Health {r.healthScorePct}/100</div></div><div className="p-3 rounded bg-slate-950 border border-slate-800"><div className="text-[10px] font-mono uppercase text-slate-500">Degradation state</div><div className="font-bold text-amber-300 mt-1">{twin.degradationState}</div><div className="text-[11px] text-slate-400 mt-1">Primary anomaly: {r.primaryAnomaly}</div></div><div className="p-3 rounded bg-slate-950 border border-slate-800"><div className="text-[10px] font-mono uppercase text-slate-500">Predicted state</div><div className="font-bold text-slate-200 mt-1">{twin.predictedState}</div><div className="text-[11px] text-slate-400 mt-1">Window: {twin.nextExpectedChange}</div></div></div>
+            <div className="flex items-center gap-2 text-[11px] font-mono text-slate-400"><span className="w-2 h-2 rounded-full bg-emerald-400" />Physical telemetry <span>→</span><span className="w-2 h-2 rounded-full bg-amber-400" />Health score / anomaly state <span>→</span><span className="w-2 h-2 rounded-full bg-red-400" />Predicted state / action</div>
+            <div className="p-3 rounded bg-amber-500/5 border border-amber-500/25 text-xs text-slate-300"><span className="font-bold text-amber-300">Probable issue: </span>{r.probableFaults[0]?.label}. <span className="text-slate-400">{r.probableFaults[0]?.disclaimer}</span></div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Current Real-time Sensor Grid (ISO vibration, thermal, torque, wear, power) */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        
-        {/* Vibration */}
-        <Card className={`border-slate-800 ${t.vibrationRmsMmS > 4.5 ? "bg-red-500/10 border-red-500/30" : "bg-slate-900/80"}`}>
-          <CardContent className="p-3 space-y-1 font-mono">
-            <div className="text-[10px] text-slate-400 uppercase flex items-center justify-between">
-              <span>Vibration</span>
-              <Activity className="w-3.5 h-3.5 text-amber-400" />
-            </div>
-            <div className="text-lg font-bold text-white font-mono-num">
-              {t.vibrationRmsMmS.toFixed(2)} <span className="text-xs font-normal text-slate-400">mm/s</span>
-            </div>
-            <div className="text-[10px] text-slate-400">ISO 10816 Zone</div>
-          </CardContent>
-        </Card>
+      <Card className="bg-slate-900/90 border-slate-800"><CardHeader className="p-4 border-b border-slate-800"><CardTitle className="text-sm font-bold text-white flex items-center gap-2"><Gauge className="w-4 h-4 text-amber-400" />Health factor attribution</CardTitle><CardDescription className="text-xs text-slate-400">Every contribution is shown as observed, derived, or simulated.</CardDescription></CardHeader><CardContent className="p-0 overflow-x-auto"><table className="w-full text-left text-xs"><thead><tr className="border-b border-slate-800 bg-slate-950/70 text-slate-400 font-mono text-[11px]"><th className="py-2.5 px-4">Factor</th><th className="py-2.5 px-3">Observed</th><th className="py-2.5 px-3">Nominal</th><th className="py-2.5 px-3">Contribution</th><th className="py-2.5 px-3">Basis</th><th className="py-2.5 px-4">Interpretation</th></tr></thead><tbody className="divide-y divide-slate-800">{r.healthFactors.map((factor) => <tr key={factor.key} className="hover:bg-slate-800/40"><td className="py-3 px-4 font-semibold text-slate-100">{factor.label}</td><td className="py-3 px-3 font-mono text-slate-200">{factor.observedValue}</td><td className="py-3 px-3 font-mono text-slate-400">{factor.nominalRange}</td><td className="py-3 px-3"><span className={`font-mono font-bold ${factor.contributionPct >= 20 ? "text-red-400" : factor.contributionPct > 0 ? "text-amber-400" : "text-emerald-400"}`}>+{factor.contributionPct}%</span></td><td className="py-3 px-3"><span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-slate-950 border border-slate-800 text-slate-400">{factor.basis}</span></td><td className="py-3 px-4 text-slate-400">{factor.explanation}</td></tr>)}</tbody></table></CardContent></Card>
 
-        {/* Process Temp & Differential */}
-        <Card className={`border-slate-800 ${t.tempDiffC > 12.0 ? "bg-amber-500/10 border-amber-500/30" : "bg-slate-900/80"}`}>
-          <CardContent className="p-3 space-y-1 font-mono">
-            <div className="text-[10px] text-slate-400 uppercase flex items-center justify-between">
-              <span>Thermal ΔT</span>
-              <Thermometer className="w-3.5 h-3.5 text-amber-400" />
-            </div>
-            <div className="text-lg font-bold text-white font-mono-num">
-              Δ {t.tempDiffC.toFixed(1)} <span className="text-xs font-normal text-slate-400">°C</span>
-            </div>
-            <div className="text-[10px] text-slate-400">Proc: {t.processTempC.toFixed(1)}°C</div>
-          </CardContent>
-        </Card>
-
-        {/* Speed */}
-        <Card className="bg-slate-900/80 border-slate-800">
-          <CardContent className="p-3 space-y-1 font-mono">
-            <div className="text-[10px] text-slate-400 uppercase flex items-center justify-between">
-              <span>Shaft Speed</span>
-              <RotateCw className="w-3.5 h-3.5 text-slate-400" />
-            </div>
-            <div className="text-lg font-bold text-white font-mono-num">
-              {t.rotationalSpeedRpm.toFixed(0)} <span className="text-xs font-normal text-slate-400">RPM</span>
-            </div>
-            <div className="text-[10px] text-slate-400">Drive Rating</div>
-          </CardContent>
-        </Card>
-
-        {/* Torque */}
-        <Card className={`border-slate-800 ${t.torqueNm > 58.0 ? "bg-amber-500/10 border-amber-500/30" : "bg-slate-900/80"}`}>
-          <CardContent className="p-3 space-y-1 font-mono">
-            <div className="text-[10px] text-slate-400 uppercase flex items-center justify-between">
-              <span>Spindle Torque</span>
-              <Zap className="w-3.5 h-3.5 text-slate-400" />
-            </div>
-            <div className="text-lg font-bold text-white font-mono-num">
-              {t.torqueNm.toFixed(1)} <span className="text-xs font-normal text-slate-400">Nm</span>
-            </div>
-            <div className="text-[10px] text-slate-400">Overstrain Index</div>
-          </CardContent>
-        </Card>
-
-        {/* Tool Wear */}
-        <Card className={`border-slate-800 ${t.toolWearMin > 210 ? "bg-red-500/10 border-red-500/30" : "bg-slate-900/80"}`}>
-          <CardContent className="p-3 space-y-1 font-mono">
-            <div className="text-[10px] text-slate-400 uppercase flex items-center justify-between">
-              <span>Tool Wear</span>
-              <Clock className="w-3.5 h-3.5 text-slate-400" />
-            </div>
-            <div className="text-lg font-bold text-white font-mono-num">
-              {t.toolWearMin} <span className="text-xs font-normal text-slate-400">min</span>
-            </div>
-            <div className="text-[10px] text-slate-400">Limit: 240 min</div>
-          </CardContent>
-        </Card>
-
-        {/* Power */}
-        <Card className="bg-slate-900/80 border-slate-800">
-          <CardContent className="p-3 space-y-1 font-mono">
-            <div className="text-[10px] text-slate-400 uppercase flex items-center justify-between">
-              <span>Motor Power</span>
-              <Zap className="w-3.5 h-3.5 text-amber-400" />
-            </div>
-            <div className="text-lg font-bold text-white font-mono-num">
-              {t.powerKw.toFixed(2)} <span className="text-xs font-normal text-slate-400">kW</span>
-            </div>
-            <div className="text-[10px] text-slate-400">Eff: {t.efficiencyPct || 92}%</div>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+        {[{ label: "Vibration", value: `${t.vibrationRmsMmS.toFixed(2)} mm/s`, icon: Activity, tone: t.vibrationRmsMmS > 4.5 ? "text-red-400" : "text-amber-400" }, { label: "Thermal ΔT", value: `Δ ${t.tempDiffC.toFixed(1)}°C`, icon: Thermometer, tone: t.tempDiffC > 12 ? "text-red-400" : "text-amber-400" }, { label: "Current", value: `${(t.motorCurrentA ?? 0).toFixed(1)} A`, icon: Zap, tone: "text-sky-400" }, { label: "Voltage", value: `${(t.motorVoltageV ?? 400).toFixed(0)} V`, icon: Zap, tone: "text-sky-400" }, { label: "Load", value: `${(t.loadPct ?? 0).toFixed(0)}%`, icon: Gauge, tone: "text-purple-400" }, { label: "RPM", value: `${t.rotationalSpeedRpm.toFixed(0)}`, icon: RotateCw, tone: "text-slate-200" }, { label: "Runtime", value: `${(t.operatingHours ?? 0).toLocaleString()} h`, icon: TimerReset, tone: "text-slate-200" }, { label: "Tool wear", value: `${t.toolWearMin} min`, icon: Clock, tone: t.toolWearMin > 210 ? "text-red-400" : "text-slate-200" }].map((item) => { const Icon = item.icon; return <Card key={item.label} className="bg-slate-900/80 border-slate-800"><CardContent className="p-3 space-y-1 font-mono"><div className="text-[10px] text-slate-400 uppercase flex items-center justify-between"><span>{item.label}</span><Icon className="w-3.5 h-3.5 text-slate-500" /></div><div className={`text-base font-bold ${item.tone}`}>{item.value}</div></CardContent></Card>; })}
       </div>
 
-      {/* Historical Telemetry Chart & Trend Analysis */}
-      <Card className="bg-slate-900/90 border-slate-800">
-        <CardHeader className="p-4 sm:p-5 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <CardTitle className="text-base font-bold text-white flex items-center space-x-2">
-              <TrendingUp className="w-4 h-4 text-amber-400" />
-              <span>24-Hour Telemetry Trend & Sensor Drift</span>
-            </CardTitle>
-            <CardDescription className="text-xs text-slate-400">
-              Correlating sensor progression with failure threshold boundaries
-            </CardDescription>
-          </div>
+      <Card className="bg-slate-900/90 border-slate-800"><CardHeader className="p-4 sm:p-5 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3"><div><CardTitle className="text-base font-bold text-white flex items-center gap-2"><TrendingUp className="w-4 h-4 text-amber-400" />Sensor replay and degradation trend</CardTitle><CardDescription className="text-xs text-slate-400">Historical replay is used to show how the current state emerged.</CardDescription></div><div className="flex items-center space-x-1 bg-slate-950 p-1 rounded border border-slate-800 font-mono text-xs overflow-x-auto"><button onClick={() => setActiveTab("vibration")} className={`px-3 py-1 rounded ${activeTab === "vibration" ? "bg-amber-500 text-slate-950 font-bold" : "text-slate-400"}`}>Vibration</button><button onClick={() => setActiveTab("thermal")} className={`px-3 py-1 rounded ${activeTab === "thermal" ? "bg-amber-500 text-slate-950 font-bold" : "text-slate-400"}`}>Thermal</button><button onClick={() => setActiveTab("mechanical")} className={`px-3 py-1 rounded ${activeTab === "mechanical" ? "bg-amber-500 text-slate-950 font-bold" : "text-slate-400"}`}>Torque & wear</button></div></CardHeader><CardContent className="p-4 pt-6"><div className="h-72"><ResponsiveContainer width="100%" height="100%">{activeTab === "vibration" ? <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}><defs><linearGradient id="detailVibration" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#f59e0b" stopOpacity={0.4} /><stop offset="95%" stopColor="#f59e0b" stopOpacity={0} /></linearGradient></defs><CartesianGrid strokeDasharray="3 3" stroke="#1e293b" /><XAxis dataKey="time" stroke="#64748b" tick={{ fontSize: 11 }} /><YAxis stroke="#64748b" tick={{ fontSize: 11 }} domain={[0, 8]} /><Tooltip contentStyle={{ backgroundColor: "#020617", borderColor: "#334155" }} /><Area type="monotone" dataKey="vibration" name="Vibration RMS (mm/s)" stroke="#f59e0b" strokeWidth={2} fill="url(#detailVibration)" /></AreaChart> : activeTab === "thermal" ? <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}><CartesianGrid strokeDasharray="3 3" stroke="#1e293b" /><XAxis dataKey="time" stroke="#64748b" tick={{ fontSize: 11 }} /><YAxis stroke="#64748b" tick={{ fontSize: 11 }} domain={[5, 18]} /><Tooltip contentStyle={{ backgroundColor: "#020617", borderColor: "#334155" }} /><Area type="monotone" dataKey="tempDiff" name="Thermal ΔT (°C)" stroke="#ef4444" strokeWidth={2} fill="#ef444420" /></AreaChart> : <LineChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}><CartesianGrid strokeDasharray="3 3" stroke="#1e293b" /><XAxis dataKey="time" stroke="#64748b" tick={{ fontSize: 11 }} /><YAxis stroke="#64748b" tick={{ fontSize: 11 }} /><Tooltip contentStyle={{ backgroundColor: "#020617", borderColor: "#334155" }} /><Line type="monotone" dataKey="torque" name="Torque (Nm)" stroke="#38bdf8" strokeWidth={2} dot={false} /><Line type="monotone" dataKey="wear" name="Tool wear (min)" stroke="#a855f7" strokeWidth={2} dot={false} /></LineChart>}</ResponsiveContainer></div></CardContent></Card>
 
-          {/* Chart View Selector */}
-          <div className="flex items-center space-x-1 bg-slate-950 p-1 rounded border border-slate-800 font-mono text-xs">
-            <button
-              onClick={() => setActiveTab("vibration")}
-              className={`px-3 py-1 rounded transition-colors ${
-                activeTab === "vibration" ? "bg-amber-500 text-slate-950 font-bold" : "text-slate-400 hover:text-white"
-              }`}
-            >
-              Vibration (ISO 10816)
-            </button>
-            <button
-              onClick={() => setActiveTab("thermal")}
-              className={`px-3 py-1 rounded transition-colors ${
-                activeTab === "thermal" ? "bg-amber-500 text-slate-950 font-bold" : "text-slate-400 hover:text-white"
-              }`}
-            >
-              Thermal Gradient (ΔT)
-            </button>
-            <button
-              onClick={() => setActiveTab("mechanical")}
-              className={`px-3 py-1 rounded transition-colors ${
-                activeTab === "mechanical" ? "bg-amber-500 text-slate-950 font-bold" : "text-slate-400 hover:text-white"
-              }`}
-            >
-              Torque & Wear
-            </button>
-          </div>
-        </CardHeader>
-
-        <CardContent className="p-4 pt-6">
-          <div className="h-72 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              {activeTab === "vibration" ? (
-                <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="colorVib" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.4}/>
-                      <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                  <XAxis dataKey="time" stroke="#64748b" tick={{ fontSize: 11 }} />
-                  <YAxis stroke="#64748b" tick={{ fontSize: 11 }} domain={[0, 8]} />
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: "#020617", borderColor: "#334155", borderRadius: "6px" }}
-                    labelStyle={{ color: "#94a3b8", fontFamily: "monospace" }}
-                  />
-                  <Area type="monotone" dataKey="vibration" name="Vibration RMS (mm/s)" stroke="#f59e0b" strokeWidth={2} fillOpacity={1} fill="url(#colorVib)" />
-                </AreaChart>
-              ) : activeTab === "thermal" ? (
-                <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="colorTemp" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#ef4444" stopOpacity={0.4}/>
-                      <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                  <XAxis dataKey="time" stroke="#64748b" tick={{ fontSize: 11 }} />
-                  <YAxis stroke="#64748b" tick={{ fontSize: 11 }} domain={[5, 18]} />
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: "#020617", borderColor: "#334155", borderRadius: "6px" }}
-                    labelStyle={{ color: "#94a3b8", fontFamily: "monospace" }}
-                  />
-                  <Area type="monotone" dataKey="tempDiff" name="Thermal Gradient ΔT (°C)" stroke="#ef4444" strokeWidth={2} fillOpacity={1} fill="url(#colorTemp)" />
-                </AreaChart>
-              ) : (
-                <LineChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                  <XAxis dataKey="time" stroke="#64748b" tick={{ fontSize: 11 }} />
-                  <YAxis stroke="#64748b" tick={{ fontSize: 11 }} />
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: "#020617", borderColor: "#334155", borderRadius: "6px" }}
-                    labelStyle={{ color: "#94a3b8", fontFamily: "monospace" }}
-                  />
-                  <Line type="monotone" dataKey="torque" name="Torque (Nm)" stroke="#38bdf8" strokeWidth={2} dot={false} />
-                  <Line type="monotone" dataKey="wear" name="Tool Wear (min)" stroke="#a855f7" strokeWidth={2} dot={false} />
-                </LineChart>
-              )}
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Machine Associated Alerts and Work Orders */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        
-        {/* Alerts for this machine */}
-        <Card className="bg-slate-900/90 border-slate-800">
-          <CardHeader className="p-4 border-b border-slate-800">
-            <CardTitle className="text-sm font-bold text-white flex items-center space-x-2">
-              <ShieldAlert className="w-4 h-4 text-red-400" />
-              <span>Machine Anomaly History ({alerts.length})</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-0 divide-y divide-slate-800">
-            {alerts.length === 0 ? (
-              <div className="p-6 text-center text-xs text-slate-500 font-mono">
-                No active anomaly triggers logged for this asset.
-              </div>
-            ) : (
-              alerts.map(a => (
-                <div key={a.id} className="p-4 space-y-1.5 text-xs">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-amber-400 font-bold">{a.id}</span>
-                    <span className="text-[10px] text-slate-500 font-mono">
-                      {new Date(a.timestamp).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
-                    </span>
-                  </div>
-                  <p className="text-slate-200 font-semibold">{a.issue}</p>
-                  <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
-                    <span>Trigger: <strong className="text-slate-300 font-mono">{a.detectedParameter}</strong></span>
-                    <span className="font-mono text-amber-400">{a.status}</span>
-                  </div>
-                </div>
-              ))
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Maintenance Actions for this machine */}
-        <Card className="bg-slate-900/90 border-slate-800">
-          <CardHeader className="p-4 border-b border-slate-800">
-            <CardTitle className="text-sm font-bold text-white flex items-center space-x-2">
-              <Wrench className="w-4 h-4 text-sky-400" />
-              <span>Maintenance Records ({workOrders.length})</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-0 divide-y divide-slate-800">
-            {workOrders.length === 0 ? (
-              <div className="p-6 text-center text-xs text-slate-500 font-mono">
-                No maintenance work orders currently linked to this machine.
-              </div>
-            ) : (
-              workOrders.map(w => (
-                <div key={w.id} className="p-4 space-y-1.5 text-xs">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-sky-400 font-bold">{w.id}</span>
-                    <span className="font-mono text-[10px] text-slate-400 font-semibold px-2 py-0.5 rounded bg-slate-800">
-                      {w.status}
-                    </span>
-                  </div>
-                  <p className="text-slate-200 font-semibold">{w.title}</p>
-                  <p className="text-[11px] text-slate-400">{w.procedureNotes}</p>
-                  <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
-                    <span>Assigned: <strong className="text-slate-300">{w.assignedTechnician}</strong></span>
-                    <span>Downtime: <strong className="text-slate-300">{w.estimatedDowntimeHours}h</strong></span>
-                  </div>
-                </div>
-              ))
-            )}
-          </CardContent>
-        </Card>
-
+        <Card className="bg-slate-900/90 border-slate-800"><CardHeader className="p-4 border-b border-slate-800"><CardTitle className="text-sm font-bold text-white flex items-center gap-2"><GitBranch className="w-4 h-4 text-amber-400" />Probable fault hypotheses</CardTitle><CardDescription className="text-xs text-slate-400">Possible contributing faults; field inspection is required.</CardDescription></CardHeader><CardContent className="p-4 space-y-2">{r.probableFaults.map((fault) => <div key={fault.label} className="p-3 rounded bg-slate-950 border border-slate-800"><div className="flex items-center justify-between"><span className="text-sm font-semibold text-slate-100">{fault.label}</span><span className="font-mono text-amber-400 text-xs">{fault.probabilityPct}% relative evidence</span></div><div className="text-xs text-slate-400 mt-1">{fault.evidence.join(" • ")}</div><div className="text-[10px] text-slate-500 mt-1">{fault.disclaimer}</div></div>)}</CardContent></Card>
+        <Card className="bg-slate-900/90 border-slate-800"><CardHeader className="p-4 border-b border-slate-800"><CardTitle className="text-sm font-bold text-white flex items-center gap-2"><TimerReset className="w-4 h-4 text-sky-400" />Degradation / RUL estimate</CardTitle><CardDescription className="text-xs text-slate-400">A demo scenario band, not a trained prognostics model.</CardDescription></CardHeader><CardContent className="p-4 space-y-3"><div className="text-2xl font-bold text-white font-mono">{r.rulEstimate.label}</div><div className="text-xs text-slate-300 leading-relaxed">{r.rulEstimate.explanation}</div><div className="flex items-center justify-between text-[11px] font-mono text-slate-400"><span>Estimate basis: {r.rulEstimate.basis}</span><span>Confidence: {r.rulEstimate.confidencePct}%</span></div><div className="p-3 rounded bg-amber-500/5 border border-amber-500/25 text-xs text-amber-200"><Info className="w-3.5 h-3.5 inline mr-1" />Never present this range as a guarantee or exact dataset-proven life.</div></CardContent></Card>
       </div>
 
+      <Card className="bg-slate-900/90 border-amber-500/30"><CardHeader className="p-4 sm:p-5 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3"><div><CardTitle className="text-base font-bold text-white flex items-center gap-2"><SparklesIcon /><span>What-if maintenance simulator</span></CardTitle><CardDescription className="text-xs text-slate-400">Compare a transparent scenario with maintenance against a scenario with no intervention.</CardDescription></div><div className="flex items-center gap-1 bg-slate-950 p-1 rounded border border-slate-800"><button onClick={() => setScenarioMode("no-maintenance")} className={`px-3 py-1.5 rounded text-xs font-mono ${scenarioMode === "no-maintenance" ? "bg-red-500/20 text-red-300" : "text-slate-400"}`}>Simulate No Maintenance</button><button onClick={() => setScenarioMode("maintenance")} className={`px-3 py-1.5 rounded text-xs font-mono ${scenarioMode === "maintenance" ? "bg-emerald-500/20 text-emerald-300" : "text-slate-400"}`}>Simulate Maintenance</button></div></CardHeader><CardContent className="p-4 space-y-3"><div className="h-64"><ResponsiveContainer width="100%" height="100%"><LineChart data={scenarioQuery.data?.points || []} margin={{ top: 12, right: 10, left: -20, bottom: 0 }}><CartesianGrid strokeDasharray="3 3" stroke="#1e293b" /><XAxis dataKey="day" tickFormatter={(value) => `+${value}d`} stroke="#64748b" tick={{ fontSize: 11 }} /><YAxis yAxisId="health" domain={[0, 100]} stroke="#64748b" tick={{ fontSize: 11 }} /><YAxis yAxisId="vibration" orientation="right" domain={[0, 10]} stroke="#64748b" tick={{ fontSize: 11 }} /><Tooltip contentStyle={{ backgroundColor: "#020617", borderColor: "#334155" }} /><Line yAxisId="health" type="monotone" dataKey="healthScorePct" name="Health score" stroke={scenarioMode === "maintenance" ? "#10b981" : "#ef4444"} strokeWidth={2} /><Line yAxisId="vibration" type="monotone" dataKey="vibrationRmsMmS" name="Vibration RMS" stroke="#f59e0b" strokeWidth={2} /></LineChart></ResponsiveContainer></div><div className="grid grid-cols-1 sm:grid-cols-3 gap-2"><div className="p-3 rounded bg-slate-950 border border-slate-800 text-xs"><span className="text-slate-400 block">Scenario outcome</span><strong className={scenarioMode === "maintenance" ? "text-emerald-300" : "text-red-300"}>{scenarioQuery.data?.outcome || "Loading scenario…"}</strong></div><div className="p-3 rounded bg-slate-950 border border-slate-800 text-xs"><span className="text-slate-400 block">Day 0 risk</span><strong className="text-amber-300 font-mono">{scenarioQuery.data?.points[0]?.estimatedRiskPct ?? "…"}%</strong></div><div className="p-3 rounded bg-slate-950 border border-slate-800 text-xs"><span className="text-slate-400 block">Day 21 risk</span><strong className="text-amber-300 font-mono">{scenarioQuery.data?.points.at(-1)?.estimatedRiskPct ?? "…"}%</strong></div></div><div className="text-[11px] text-slate-500 font-mono">{scenarioQuery.data?.disclaimer}</div></CardContent></Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6"><Card className="bg-slate-900/90 border-slate-800"><CardHeader className="p-4 border-b border-slate-800"><CardTitle className="text-sm font-bold text-white flex items-center gap-2"><ShieldAlert className="w-4 h-4 text-red-400" />Machine alert history ({alerts.length})</CardTitle></CardHeader><CardContent className="p-0 divide-y divide-slate-800">{alerts.length === 0 ? <div className="p-6 text-center text-xs text-slate-500">No anomaly triggers logged for this asset.</div> : alerts.map((alert) => <div key={alert.id} className="p-4 space-y-1.5 text-xs"><div className="flex items-center justify-between"><span className="font-mono text-amber-400 font-bold">{alert.id}</span><span className="text-[10px] text-slate-500 font-mono">{new Date(alert.timestamp).toLocaleString([], { dateStyle: "short", timeStyle: "short" })}</span></div><p className="text-slate-200 font-semibold">{alert.issue}</p><div className="flex items-center justify-between text-[11px] text-slate-400"><span>Trigger: <strong className="text-slate-300 font-mono">{alert.detectedParameter}</strong></span><span className="font-mono text-amber-400">{alert.status}</span></div></div>)}</CardContent></Card><Card className="bg-slate-900/90 border-slate-800"><CardHeader className="p-4 border-b border-slate-800"><CardTitle className="text-sm font-bold text-white flex items-center gap-2"><Wrench className="w-4 h-4 text-sky-400" />Maintenance records ({workOrders.length})</CardTitle></CardHeader><CardContent className="p-0 divide-y divide-slate-800">{workOrders.length === 0 ? <div className="p-6 text-center text-xs text-slate-500">No maintenance work orders currently linked to this machine.</div> : workOrders.map((workOrder) => <div key={workOrder.id} className="p-4 space-y-1.5 text-xs"><div className="flex items-center justify-between"><span className="font-mono text-sky-400 font-bold">{workOrder.id}</span><span className="font-mono text-[10px] text-slate-400 px-2 py-0.5 rounded bg-slate-800">{workOrder.status}</span></div><p className="text-slate-200 font-semibold">{workOrder.title}</p><p className="text-[11px] text-slate-400">{workOrder.procedureNotes}</p></div>)}</CardContent></Card></div>
     </div>
   );
+}
+
+function SparklesIcon() {
+  return <TrendingUp className="w-4 h-4 text-amber-400" />;
 }

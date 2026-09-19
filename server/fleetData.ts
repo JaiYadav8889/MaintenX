@@ -1,4 +1,4 @@
-import { MachineRecord, SensorTelemetry, AlertRecord, MaintenanceAction, DatasetInfo } from "../shared/domain";
+import { MachineRecord, SensorTelemetry, AlertRecord, MaintenanceAction, DatasetInfo, ScenarioAnalysis } from "../shared/domain";
 import { evaluateMachineTelemetry } from "../shared/riskEngine";
 import fs from "fs";
 import path from "path";
@@ -232,10 +232,61 @@ function generateHistory(base: SensorTelemetry, hours = 24): SensorTelemetry[] {
   return history;
 }
 
+function buildDigitalTwin(risk: ReturnType<typeof evaluateMachineTelemetry>, mode: "observed" | "maintenance" | "no-maintenance" = "observed") {
+  const state = risk.riskCategory === "CRITICAL"
+    ? "CRITICAL"
+    : risk.riskCategory === "HIGH"
+      ? "HIGH_RISK"
+      : risk.riskCategory === "MEDIUM"
+        ? "DEGRADING"
+        : risk.degradationTrend === "watch"
+          ? "AGING"
+          : "NORMAL";
+
+  const currentState = state === "NORMAL"
+    ? "Stable operating parameters"
+    : state === "AGING"
+      ? "Early deviation from baseline"
+      : state === "DEGRADING"
+        ? "Multi-sensor degradation detected"
+        : state === "HIGH_RISK"
+          ? "Elevated failure risk requires planned inspection"
+          : "Critical condition requires immediate inspection";
+
+  const degradationState = risk.degradationTrend === "stable"
+    ? "No material degradation trend"
+    : `${risk.degradationTrend.replace("rapidly ", "rapid ")} trend across ${risk.primaryAnomaly.toLowerCase()}`;
+
+  const predictedState = risk.riskCategory === "LOW"
+    ? "Likely to remain within nominal band"
+    : risk.riskCategory === "MEDIUM"
+      ? "May enter high-risk band without inspection"
+      : "May progress toward failure condition without intervention";
+
+  return {
+    state,
+    currentState,
+    degradationState,
+    predictedState,
+    nextExpectedChange: risk.rulEstimate.label,
+    scenarioMode: mode,
+    basis: mode === "observed" ? "derived" : "simulated",
+  } as const;
+}
+
 // In-memory fleet state
 export let fleetStore: MachineRecord[] = INITIAL_FLEET_BASE.map(m => {
   const history = generateHistory(m.baseTelemetry, 24);
-  const currentTelemetry = history[history.length - 1];
+  const initialTelemetry = history[history.length - 1];
+  const baselineTelemetry = history[0];
+  const currentTelemetry: SensorTelemetry = {
+    ...initialTelemetry,
+    motorVoltageV: 400,
+    loadPct: Math.max(15, Math.min(100, (initialTelemetry.torqueNm / 55) * 70)),
+    operatingHours: Math.round(initialTelemetry.toolWearMin * 3.1),
+    vibrationTrendPct: Math.max(0, Math.round(((initialTelemetry.vibrationRmsMmS - baselineTelemetry.vibrationRmsMmS) / Math.max(baselineTelemetry.vibrationRmsMmS, 0.1)) * 100)),
+    temperatureTrendPct: Math.max(0, Math.round(((initialTelemetry.tempDiffC - baselineTelemetry.tempDiffC) / Math.max(baselineTelemetry.tempDiffC, 0.1)) * 100)),
+  };
   const riskAssessment = evaluateMachineTelemetry(currentTelemetry);
 
   let status: MachineRecord["status"] = "operational";
@@ -251,6 +302,7 @@ export let fleetStore: MachineRecord[] = INITIAL_FLEET_BASE.map(m => {
     status,
     currentTelemetry,
     riskAssessment,
+    digitalTwin: buildDigitalTwin(riskAssessment),
     lastInspectionDate: Date.now() - 14 * 24 * 3600 * 1000,
     nextInspectionScheduledDate: Date.now() + (riskAssessment.riskCategory === "CRITICAL" ? 1 : 14) * 24 * 3600 * 1000,
     telemetryHistory: history,
@@ -503,6 +555,11 @@ export function simulateMachineProgression(
     powerKw: Math.round(((newTorque * 2 * Math.PI * newRpm) / 60) / 10) / 100,
     vibrationRmsMmS: newVib,
     motorCurrentA: Math.round((12.0 + (newTorque / 50.0) * 8.0) * 10) / 10,
+    motorVoltageV: 400,
+    loadPct: Math.max(15, Math.min(100, Math.round((newTorque / 55) * 70))),
+    operatingHours: Math.round(newWear * 3.1),
+    vibrationTrendPct: targetStage === "healthy" ? 0 : targetStage === "warning" ? 14 : targetStage === "high_risk" ? 28 : 45,
+    temperatureTrendPct: targetStage === "healthy" ? 0 : targetStage === "warning" ? 10 : targetStage === "high_risk" ? 22 : 38,
     efficiencyPct: Math.round(Math.max(65, 96 - (newVib * 3.5)))
   };
 
@@ -516,6 +573,7 @@ export function simulateMachineProgression(
 
   machine.currentTelemetry = updatedTelemetry;
   machine.riskAssessment = newRisk;
+  machine.digitalTwin = buildDigitalTwin(newRisk, targetStage === "healthy" ? "maintenance" : "no-maintenance");
   machine.dataSource = "simulated";
 
   if (newRisk.riskCategory === "CRITICAL") {
@@ -548,4 +606,48 @@ export function simulateMachineProgression(
   }
 
   return machine;
+}
+
+export function buildScenarioAnalysis(machineId: string, scenario: "maintenance" | "no-maintenance"): ScenarioAnalysis {
+  const machine = fleetStore.find((candidate) => candidate.id === machineId);
+  if (!machine) throw new Error(`Machine ${machineId} not found`);
+
+  const base = machine.currentTelemetry;
+  const points = [0, 7, 14, 21].map((day) => {
+    const fraction = day / 21;
+    const multiplier = scenario === "maintenance" ? 1 - fraction * 0.42 : 1 + fraction * 0.42;
+    const temperatureMultiplier = scenario === "maintenance" ? 1 - fraction * 0.24 : 1 + fraction * 0.30;
+    const simulated: SensorTelemetry = {
+      ...base,
+      timestamp: Date.now() + day * 24 * 3600 * 1000,
+      vibrationRmsMmS: Math.max(1.1, Math.round(base.vibrationRmsMmS * multiplier * 100) / 100),
+      tempDiffC: Math.max(7.8, Math.round(base.tempDiffC * temperatureMultiplier * 10) / 10),
+      processTempC: Math.max(26, Math.round((base.airTempC + base.tempDiffC * temperatureMultiplier) * 10) / 10),
+      torqueNm: Math.max(18, Math.round(base.torqueNm * (scenario === "maintenance" ? 1 - fraction * 0.12 : 1 + fraction * 0.10) * 10) / 10),
+      toolWearMin: Math.max(20, Math.round(base.toolWearMin + (scenario === "maintenance" ? -fraction * 20 : fraction * 25))),
+      vibrationTrendPct: scenario === "maintenance" ? Math.max(0, Math.round((base.vibrationTrendPct ?? 0) - fraction * 18)) : Math.round((base.vibrationTrendPct ?? 0) + fraction * 24),
+      temperatureTrendPct: scenario === "maintenance" ? Math.max(0, Math.round((base.temperatureTrendPct ?? 0) - fraction * 14)) : Math.round((base.temperatureTrendPct ?? 0) + fraction * 18),
+    };
+    simulated.powerKw = Math.round(((simulated.torqueNm * 2 * Math.PI * simulated.rotationalSpeedRpm) / 60 / 1000) * 100) / 100;
+    const assessment = evaluateMachineTelemetry(simulated);
+    return {
+      day,
+      vibrationRmsMmS: simulated.vibrationRmsMmS,
+      tempDiffC: simulated.tempDiffC,
+      healthScorePct: assessment.healthScorePct,
+      estimatedRiskPct: assessment.estimatedRiskPct,
+      riskCategory: assessment.riskCategory,
+    };
+  });
+
+  return {
+    machineId,
+    scenario,
+    title: scenario === "maintenance" ? "Scenario: Maintenance performed" : "Scenario: No maintenance",
+    disclaimer: "Scenario analysis only. These points are transparent demo projections, not physically guaranteed predictions or a trained RUL model.",
+    points,
+    outcome: scenario === "maintenance"
+      ? "Projected vibration and risk decline after an inspection and lubrication/bearing intervention."
+      : "Projected degradation accelerates if the current condition is left without inspection or intervention.",
+  };
 }

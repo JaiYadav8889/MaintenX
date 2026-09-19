@@ -8,7 +8,8 @@ import {
   alertStore, 
   maintenanceStore, 
   DATASETS_CATALOG, 
-  simulateMachineProgression 
+  simulateMachineProgression,
+  buildScenarioAnalysis
 } from "./fleetData";
 import { evaluateMachineTelemetry } from "../shared/riskEngine";
 import fs from "fs";
@@ -74,6 +75,20 @@ export const appRouter = router({
         timestamp: Date.now()
       };
     }),
+
+    getDigitalTwin: publicProcedure
+      .input(z.object({ id: z.string() }))
+      .query(({ input }) => {
+        const machine = fleetStore.find((candidate) => candidate.id === input.id);
+        if (!machine) throw new Error(`Machine with ID ${input.id} was not found.`);
+        return {
+          machineId: machine.id,
+          machineName: machine.name,
+          digitalTwin: machine.digitalTwin,
+          currentTelemetry: machine.currentTelemetry,
+          riskAssessment: machine.riskAssessment,
+        };
+      }),
 
     // Get specific machine with 24-hr history and alerts
     getById: publicProcedure
@@ -305,6 +320,13 @@ export const appRouter = router({
         };
       }),
 
+    whatIf: publicProcedure
+      .input(z.object({
+        machineId: z.string(),
+        scenario: z.enum(["maintenance", "no-maintenance"]),
+      }))
+      .query(({ input }) => buildScenarioAnalysis(input.machineId, input.scenario)),
+
     resetFleet: publicProcedure.mutation(() => {
       // Re-trigger progression back to initial conditions
       fleetStore.forEach(m => {
@@ -318,6 +340,40 @@ export const appRouter = router({
       });
       return { success: true, count: fleetStore.length };
     })
+  }),
+
+  analytics: router({
+    getPlantMetrics: publicProcedure.query(() => {
+      const total = fleetStore.length || 1;
+      const critical = fleetStore.filter((machine) => machine.riskAssessment.riskCategory === "CRITICAL").length;
+      const highRisk = fleetStore.filter((machine) => machine.riskAssessment.riskCategory === "HIGH").length;
+      const averageRisk = Math.round(fleetStore.reduce((sum, machine) => sum + machine.riskAssessment.estimatedRiskPct, 0) / total);
+      const averageHealth = Math.round(fleetStore.reduce((sum, machine) => sum + machine.riskAssessment.healthScorePct, 0) / total);
+      const activeAlerts = alertStore.filter((alert) => alert.status !== "Resolved").length;
+      const openWorkOrders = maintenanceStore.filter((workOrder) => workOrder.status !== "Completed").length;
+
+      return {
+        availabilityPct: 96.4,
+        mtbfHours: 1840,
+        mttrHours: 2.6,
+        downtimeHours30d: 18.5,
+        failureFrequency30d: 2,
+        maintenanceCost30d: 12400,
+        averageHealth,
+        averageRisk,
+        criticalAssets: critical,
+        highRiskAssets: highRisk,
+        activeAlerts,
+        openWorkOrders,
+        dataBasis: "Demo fleet metric derived from current in-memory prototype state; plant KPIs are simulated until historical production records are connected.",
+        trend: [
+          { label: "W-4", health: Math.max(0, averageHealth - 8), risk: Math.min(99, averageRisk + 8) },
+          { label: "W-3", health: Math.max(0, averageHealth - 5), risk: Math.min(99, averageRisk + 5) },
+          { label: "W-2", health: Math.max(0, averageHealth - 2), risk: Math.min(99, averageRisk + 2) },
+          { label: "W-1", health: averageHealth, risk: averageRisk },
+        ],
+      };
+    }),
   })
 });
 

@@ -14,6 +14,7 @@ import PredictiveInsights from "./pages/PredictiveInsights";
 import AlertCenter from "./pages/AlertCenter";
 import MaintenanceWorkspace from "./pages/MaintenanceWorkspace";
 import DataCenter from "./pages/DataCenter";
+import Analytics from "./pages/Analytics";
 import SimulationDemo from "./pages/SimulationDemo";
 
 function Router() {
@@ -27,6 +28,7 @@ function Router() {
         <Route path="/alerts" component={AlertCenter} />
         <Route path="/maintenance" component={MaintenanceWorkspace} />
         <Route path="/datasets" component={DataCenter} />
+        <Route path="/analytics" component={Analytics} />
         <Route path="/simulation" component={SimulationDemo} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />

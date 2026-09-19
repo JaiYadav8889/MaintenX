@@ -15,7 +15,8 @@ import {
   Clock,
   Layers,
   Sparkles,
-  ChevronRight
+  ChevronRight,
+  BarChart3
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -65,6 +66,7 @@ export function MaintenxLayout({ children }: LayoutProps) {
     { href: "/alerts", label: "Alert Center", icon: ShieldAlert, badge: summary?.activeAlerts, badgeVariant: "destructive" },
     { href: "/maintenance", label: "Maintenance", icon: Wrench, badge: summary?.pendingMaintenance },
     { href: "/datasets", label: "Data Center", icon: Database },
+    { href: "/analytics", label: "Analytics", icon: BarChart3 },
     { href: "/simulation", label: "Interactive Demo", icon: PlayCircle, highlight: true }
   ];
 

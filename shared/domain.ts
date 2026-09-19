@@ -2,7 +2,7 @@ export type RiskCategory = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 
 export type MachineStatus = "operational" | "warning" | "critical" | "in_maintenance" | "offline";
 
-export type MachineType = 
+export type MachineType =
   | "CNC Milling Station (L-Series)"
   | "CNC High-Torque Station (M-Series)"
   | "Precision Lathe (H-Series)"
@@ -10,8 +10,10 @@ export type MachineType =
   | "Coolant Centrifugal Pump"
   | "Hydraulic Press Actuator";
 
+export type DataBasis = "measured" | "derived" | "simulated";
+
 export interface SensorTelemetry {
-  timestamp: number; // Unix ms
+  timestamp: number;
   airTempC: number;
   processTempC: number;
   tempDiffC: number;
@@ -19,9 +21,14 @@ export interface SensorTelemetry {
   torqueNm: number;
   toolWearMin: number;
   powerKw: number;
-  vibrationRmsMmS: number; // ISO 10816 vibration severity (mm/s)
+  vibrationRmsMmS: number;
   vibrationPeakG?: number;
   motorCurrentA?: number;
+  motorVoltageV?: number;
+  loadPct?: number;
+  operatingHours?: number;
+  vibrationTrendPct?: number;
+  temperatureTrendPct?: number;
   efficiencyPct?: number;
 }
 
@@ -35,22 +42,76 @@ export interface ContributingSignal {
   weightPct: number;
 }
 
+export interface HealthFactor {
+  key: "vibration" | "temperature" | "current" | "voltage" | "load" | "rpm" | "runtime" | "trend" | "anomaly";
+  label: string;
+  observedValue: string;
+  nominalRange: string;
+  contributionPct: number;
+  status: "normal" | "watch" | "degraded" | "critical";
+  basis: DataBasis;
+  explanation: string;
+}
+
+export interface FaultHypothesis {
+  label: "Bearing degradation" | "Overheating" | "Overload" | "Imbalance" | "Abnormal vibration" | "Lubrication-related concern" | "No dominant fault signature";
+  probabilityPct: number;
+  evidence: string[];
+  basis: DataBasis;
+  disclaimer: string;
+}
+
+export interface RulEstimate {
+  minDays: number;
+  maxDays: number;
+  label: string;
+  basis: "transparent-demo-estimate" | "not-supported-by-current-data";
+  confidencePct: number;
+  explanation: string;
+}
+
+export type DigitalTwinState = "NORMAL" | "AGING" | "DEGRADING" | "HIGH_RISK" | "CRITICAL";
+
+export interface DigitalTwinSnapshot {
+  state: DigitalTwinState;
+  currentState: string;
+  degradationState: string;
+  predictedState: string;
+  nextExpectedChange: string;
+  scenarioMode: "observed" | "maintenance" | "no-maintenance";
+  basis: DataBasis;
+}
+
+export type MaintenancePriority = "P1" | "P2" | "P3" | "P4";
+
 export interface RiskAssessment {
-  estimatedRiskPct: number; // 0 to 100
+  estimatedRiskPct: number;
   riskCategory: RiskCategory;
-  healthScorePct: number; // 100 - risk or condition-weighted
-  confidencePct: number; // 0 to 100 transparent confidence metric based on sensor coverage and historical baseline stability
+  healthScorePct: number;
+  confidencePct: number;
   isAnomalyDetected: boolean;
-  anomalyScore: number; // 0.0 to 1.0
+  anomalyScore: number;
+  primaryAnomaly: string;
+  healthFactors: HealthFactor[];
   contributingSignals: ContributingSignal[];
+  probableFaults: FaultHypothesis[];
+  rulEstimate: RulEstimate;
+  maintenancePriority: MaintenancePriority;
+  degradationTrend: "stable" | "watch" | "increasing" | "rapidly increasing";
   explanation: string;
   recommendedAction: string;
-  recommendedInspectionType: "Bearing & Rotor Check" | "Thermal & Cooling Loop" | "Tool Wear Replacement" | "Power Supply & Harmonics" | "Dynamic Balancing & Alignment" | "Routine Operational Inspection";
+  recommendedInspectionType:
+    | "Bearing & Rotor Check"
+    | "Thermal & Cooling Loop"
+    | "Tool Wear Replacement"
+    | "Power Supply & Harmonics"
+    | "Dynamic Balancing & Alignment"
+    | "Routine Operational Inspection";
   urgency: "Routine (within 30 days)" | "Scheduled (within 7 days)" | "Urgent (within 48 hours)" | "Immediate (within 4 hours)";
 }
 
 export interface MachineRecord {
-  id: string; // e.g., "MTR-104", "CNC-208"
+  id: string;
   serialNumber: string;
   name: string;
   type: MachineType;
@@ -58,20 +119,20 @@ export interface MachineRecord {
   status: MachineStatus;
   currentTelemetry: SensorTelemetry;
   riskAssessment: RiskAssessment;
-  lastInspectionDate: number; // Unix ms
-  nextInspectionScheduledDate: number; // Unix ms
-  telemetryHistory: SensorTelemetry[]; // Last 24-48 historical points
+  digitalTwin: DigitalTwinSnapshot;
+  lastInspectionDate: number;
+  nextInspectionScheduledDate: number;
+  telemetryHistory: SensorTelemetry[];
   activeAlertCount: number;
   installedDate: number;
   dataSource: "dataset-derived" | "simulated" | "real-time-sensor";
 }
 
 export type AlertSeverity = "low" | "medium" | "high" | "critical";
-
 export type AlertStatus = "New" | "Acknowledged" | "In Inspection" | "Resolved";
 
 export interface AlertRecord {
-  id: string; // e.g. "ALT-2026-091"
+  id: string;
   machineId: string;
   machineName: string;
   severity: AlertSeverity;
@@ -120,4 +181,22 @@ export interface DatasetInfo {
   machineTypesRepresented: string[];
   scientificReference: string;
   datasetStatus: "Loaded" | "Ready" | "Available";
+}
+
+export interface ScenarioPoint {
+  day: number;
+  vibrationRmsMmS: number;
+  tempDiffC: number;
+  healthScorePct: number;
+  estimatedRiskPct: number;
+  riskCategory: RiskCategory;
+}
+
+export interface ScenarioAnalysis {
+  machineId: string;
+  scenario: "maintenance" | "no-maintenance";
+  title: string;
+  disclaimer: string;
+  points: ScenarioPoint[];
+  outcome: string;
 }
