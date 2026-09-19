@@ -22,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import PresenterDemoDrawer from "./PresenterDemoDrawer";
+import { MaintenxMark } from "./MaintenxMark";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -81,10 +82,10 @@ export function MaintenxLayout({ children }: LayoutProps) {
             {/* Brand Logo & Tagline */}
             <div className="flex items-center space-x-3">
               <Link href="/" className="flex items-center space-x-2.5 group">
-                <div className="w-9 h-9 rounded bg-amber-500 flex items-center justify-center font-bold text-slate-950 text-xl tracking-tighter shadow-md shadow-amber-500/20 group-hover:bg-amber-400 transition-colors">
-                  <span className="font-mono">M</span>
-                  <span className="text-amber-950 text-sm font-black -ml-0.5">X</span>
-                </div>
+                <MaintenxMark
+                  className="w-10 h-10 shrink-0 text-amber-500 drop-shadow-[0_0_12px_rgba(242,169,0,0.14)] transition-transform duration-200 group-hover:scale-[1.03]"
+                  title="MaintenX signature mark"
+                />
                 <div>
                   <div className="flex items-center space-x-2">
                     <span className="text-lg font-bold tracking-tight text-white group-hover:text-amber-400 transition-colors">
